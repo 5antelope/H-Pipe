@@ -1,21 +1,36 @@
-TITLE. Please provide the title of your project, followed by the names of all team members. Teams may include up to two students. There are no exceptions to this rule.
+# DPSTNet
+\- Lei Sun, Yang Wu
 
-SUMMARY. Summarize your project in no more than 2-3 sentences. Describe what you plan to do and what parallel systems you will be working with. Example one-liners include (you should add a bit more detail):
+### SUMMARY
+We are going to create optimized implementations of *Spatial transformer networks* on heterogeneous platforms with [Halide](http://halide-lang.org/). Embedded our transformer to a CNN graphic pipeline, and compare/analyse performance on the tasks like LeNet-5 or maybe other open datasets.
 
-We are going to implement an optimized Smoothed Particle Hydrodynamics fluid solver on the NVIDIA GPUs in the lab.
-We are going port the Go runtime to Blacklight.
-We are going to create optimized implementations of sparse-matrix multiplication on both GPU and multi-core CPU platforms, and perform a detailed analysis of both systems' performance characteristics.
-We are going to back-engineer the unpublished machine specifications of the GPU in the tablet my partner just purchased.
-We are going to implement two possible algorithms for a real-time computer vision application on a mobile device and measure their energy consumption in the lab.
-BACKGROUND. If your project involves accelerating a compute-intensive application, describe the application or piece of the application you are going to implement in more detail. This description need only be a few paragraphs. It might be helpful to include a block diagram or pseudocode of the basic idea. An important detail is what aspects of the problem might benefit from parallelism? and why?
+### BACKGROUND
+The traditional CNN limited by the lack of ability to be spatially invariant to the input data
+in a computationally and parameter efficient manner. There are some extra work that needs to be done in steps like *MAX-POLL* layer to offset the affects from rotation, scale or replacement. But that needs more deeper layers. What we want to achieve from Spatial transformer networks is a 'corrected' input after localization and transformations. 
 
-THE CHALLENGE. Describe why the problem is challenging. What aspects of the problem might make it difficult to parallelize? In other words, what to you hope to learn by doing the project?
+This transform also requires a *localisation net* to train transformation parameters, which is by itself a CNN network. Therefore, this procedure involves matrix computation, convolution integral and backpropagation to turn parameters. All these steps can use parallel to speed up. 
 
-Describe the workload: what are the dependencies, what are its memory access characteristics? (is there locality? is there a high communication to computation ratio?), is there divergent execution?
+NOTE: *This is our current ideas on some potential steps that can be benefit from parallel, might adjust later.*
+
+### THE CHALLENGE
+We need to learn theories behind neural networks, which is new to us. CNN itself is complicated and the paper described the idea is pretty new.
+
+### WORKLOAD
+And we think the cache footprint would be pretty huge in convolution, although the convolution step does not have strong dependency, locality in convolution won't affect too much. We think there should be some optimization in terms of how to explore the footprint in memory. 
+
+Also the backpropagation could be requires intensive computation and some intermeida differential result for chain rule.
+
+#### CONSTRAINTS
 Describe constraints: What are the properties of the system that make mapping the workload to it challenging?
-RESOURCES. Describe the resources (type of computers, starter code, etc.) you will use. What code base will you start from? Are you starting from scratch or using an existing piece of code? Is there a book or paper that you are using as a reference (if so, provide a citation)? Are there any other resources you need, but haven't figured out how to obtain yet? Could you benefit from access to any special machines?
 
-GOALS AND DELIVERABLES. Describe the deliverables or goals of your project.
+### RESOURCES
+We are going to use GHC machines, and start form scratch in Halide. The idea comes from the paper: [Spatial transformer networks](http://arxiv.org/pdf/1506.02025v3.pdf) from Google. There are some implementation in [Caffe](https://github.com/XiaoxiaoGuo/caffe-stn) and [Python](https://github.com/skaae/recurrent-spatial-transformer-code), we will try to compete their performance. 
+
+We will add more reference if we find some useful reference paper/implementations. 
+
+### GOALS AND DELIVERABLES
+<!-- Describe the deliverables or goals of your project. -->
+
 
 This is by far the most important section of the proposal:
 
@@ -25,4 +40,14 @@ If your project is an analysis project, what are you hoping to learn about the w
 Systems project proposals should describe what the system will be capable of and what performance is hoped to be achieved.
 PLATFORM CHOICE. Describe why the platform (computer and/or language) you have chosen is a good one for your needs. Why does it make sense to use this parallel system for the workload you have chosen?
 
-SCHEDULE. Produce a schedule for your project. Your schedule should have at least one item to do per week. List what you plan to get done each week from now until the parallelism competition in order to meet your project goals. Keep in mind that due to other classes, you'll have more time to work some weeks than others (work that into the schedule). You will need to re-evaluate your progress at the end of each week and update this schedule accordingly. Note the intermediate checkpoint deadline is April 16th. In your schedule we encourage you to be precise as precise as possible. It's often helpful to work backward in time from your deliverables and goals, writing down all the little things you'll need to do (establish the dependencies!).
+### SCHEDULE
+
+| Time Line  | Goal          | 
+|:----------:|:--------------| 
+| April 8th  | Understand of mechanism behind the transformer and implemented a serial version of Spatial transformer networks in Halide | 
+| April 15th | Connect Halide implementation to following graphic piple line on LeNet-5 dataset| 
+| April 22nd | Analise the dependecy of transformer and the relation of following pipelines and build a prototype of prarllel version in Halide |
+| April 29th | A working parallel version of transformer and tune different schedule to improve performance |
+| May 7th    | Wrap up implementatin and compare/analyse the performance in report |
+
+NOTE: *The work in week of April 8th and 15th might to working together, since the learning curve for CNN and backpropagation is pretty steep. But should have a working implementation of pipeline in Halide by April 15th.*
