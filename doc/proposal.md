@@ -2,7 +2,7 @@
 \- Lei Sun, Yang Wu
 
 ### SUMMARY
-We are going to create optimized implementations of *Spatial transformer networks* on heterogeneous platforms with [Halide](http://halide-lang.org/). Embedded our transformer to a CNN graphic pipeline, and compare/analyse performance on the tasks like LeNet-5 or maybe other open datasets.
+We are going to find the optimal implementations of *Spatial transformer networks* on heterogeneous platforms with both [Halide](http://halide-lang.org/) and our manually-tuned implementation. Embedded our transformer to a CNN graphic pipeline, and compare/analyse performance on the tasks like LeNet-5 or maybe other open datasets.
 
 ### BACKGROUND
 The traditional CNN limited by the lack of ability to be spatially invariant to the input data
@@ -13,7 +13,11 @@ This transform also requires a *localisation net* to train transformation parame
 NOTE: *This is our current ideas on some potential steps that can be benefit from parallel, might adjust later.*
 
 ### THE CHALLENGE
-We need to learn theories behind neural networks, which is new to us. CNN itself is complicated and the paper described the idea is pretty new.
+First of all, we need to learn theories and algorithm behind neural networks, which is new to us. CNN itself is complicated and the paper described the idea is pretty new.
+
+Second, we need to adopt different opensource implememtation and try to find parallelism, locatlity, or less duplicated work in those implementation to see if we could implement the algorithm in the most optimized way.
+
+Last, we will implement this in [Halide](http://halide-lang.org/). Halide's 
 
 ### WORKLOAD
 And we think the cache footprint would be pretty huge in convolution, although the convolution step does not have strong dependency, locality in convolution won't affect too much. We think there should be some optimization in terms of how to explore the footprint in memory. 
