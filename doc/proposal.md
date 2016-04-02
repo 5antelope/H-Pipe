@@ -35,7 +35,7 @@ Also, if we add padding in matrix to avoid the data shrink too quickly, there ca
 
 
 ### RESOURCES
-We are going to use GHC machines, and start form scratch in Halide. The idea comes from the paper: [Spatial transformer networks](http://arxiv.org/pdf/1506.02025v3.pdf) from Google. There are some implementation in [Caffe](https://github.com/XiaoxiaoGuo/caffe-stn) and [Python](https://github.com/skaae/recurrent-spatial-transformer-code), we will try to compete their performance. 
+We are going to use GHC machines, and start form scratch in Halide. The idea comes from Google's paper: [Spatial transformer networks](http://arxiv.org/pdf/1506.02025v3.pdf). There are some implementation in [Caffe](https://github.com/XiaoxiaoGuo/caffe-stn) and [Python](https://github.com/skaae/recurrent-spatial-transformer-code), we will try to compete their performance. 
 
 We will add more reference if we find some useful reference paper/implementations. 
 
