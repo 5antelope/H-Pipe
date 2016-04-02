@@ -21,13 +21,13 @@ Second, we need to adopt different opensource implememtation and try to find par
 
 Last, we will implement this in [Halide](http://halide-lang.org/). Halide's a new programming language came out in 2011/2012, there could be some un-implemented and important features for our project.
 
-** WORKLOAD **
+**WORKLOAD**
 
 And we think the cache footprint would be pretty huge in convolution, although the convolution step does not have strong dependency, locality in convolution won't affect too much. We think there should be some optimization in terms of how to explore the footprint in memory. 
 
 Also the backpropagation could be requires intensive computation and some intermeida differential result for chain rule.
 
-** CONSTRAINTS **
+**CONSTRAINTS**
 <!-- Describe constraints: What are the properties of the system that make mapping the workload to it challenging? -->
 The forward and backpropagation might leave more memory footprint than a machine in cluster can have. We need to find a decomposition method to reduce the affect of that.
 
