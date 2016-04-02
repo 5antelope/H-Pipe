@@ -8,7 +8,7 @@ We are going to find the optimal implementations of *Spatial transformer network
 
 ### BACKGROUND
 The traditional CNN limited by the lack of ability to be spatially invariant to the input data
-in a computationally and parameter efficient manner. There are some extra work that needs to be done in steps like *MAX-POLL* layer to offset the affects from rotation, scale or replacement. But that needs more deeper layers. What we want to achieve from Spatial transformer networks is a 'corrected' input after localization and transformations. 
+in a computationally and parameter efficient manner. There are some extra work that needs to be done in steps like *MAX-POLL* layer to offset the affects from rotation, scale or shift. But that needs more deeper layers. What we want to achieve from Spatial transformer networks is a 'corrected' input after localization and transformations. 
 
 This transform also requires a *localisation net* to train transformation parameters, which is by itself a CNN network. Therefore, this procedure involves matrix computation, convolution integral and backpropagation to turn parameters. All these steps can use parallel to speed up. 
 
