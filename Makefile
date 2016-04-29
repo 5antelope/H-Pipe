@@ -19,6 +19,9 @@ all: dirs $(OBJDIR)
 dirs:
 	mkdir -p $(OBJDIR)
 
+run:
+	python inception.py
+
 clean:
 	rm -rf $(OBJDIR)
 
