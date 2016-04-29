@@ -30,6 +30,7 @@ int main(int argc, char* argv[]) {
             { break; }
             imshow( "Sample Image", img);
         }*/
+
         // imwrite(std::to_string(count) + ".jpg", img);
         count++;
         cur->Next();
