@@ -4,5 +4,10 @@
 #include "utils.h"
 
 int main(int argc, char **argv) {
+    google::InitGoogleLogging(argv[0]);
+
+    // Network structure
+    // ???
+
     return 0;
 }
