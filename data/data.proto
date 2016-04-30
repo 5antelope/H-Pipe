@@ -1,5 +1,20 @@
 syntax = "proto2";
 
+message Argument {
+  optional string name = 1;
+  optional float f = 2;
+  optional int32 i = 3;
+  optional string s = 4;
+  repeated float floats = 5;
+  repeated int32 ints = 6;
+  repeated string strings = 7;
+}
+
+enum DeviceType {
+  CPU = 0;     // In default, we will use CPU.
+  CUDA = 1;    // CUDA, with custom kernels.
+}
+
 message TensorProto {
   // The dimensions in the tensor.
   repeated int32 dims = 1;
@@ -19,6 +34,37 @@ message TensorProto {
 
 message TensorProtos {
   repeated TensorProto protos = 1;
+}
+
+
+message OperatorDef {
+  repeated string input = 1; // the name of the input blobs
+  repeated string output = 2; // the name of output top blobs
+  optional string name = 3; // the layer name
+  optional string type = 4; // the layer type
+
+  repeated Argument arg = 5;
+
+  optional DeviceOption device_option = 6;
+
+  // Optionally, one can specify an engine when there are multiple
+  // implementations available simultaneously for one device type.
+  optional string engine = 7;
+
+  // For most networks, don't do extensions. Instead, pack the parameters into
+  // the three categories listed above, and document them clearly in the source
+  // code.
+  extensions 1000 to max;
+}
+
+message DeviceOption {
+  // Options that need to be carried out before running the execution.
+  optional DeviceType device_type = 1 [ default = CPU ];
+  // the cuda gpu id. If the device is not CUDA, this field will simply be
+  // ignored.
+  optional int32 cuda_gpu_id = 2;
+  // The random seed to start the device random number generator with.
+  optional uint32 random_seed = 3;
 }
 
 message NetDef {
