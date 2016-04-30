@@ -1,14 +1,45 @@
 syntax = "proto2";
 
-message Datum {
-  optional int32 channels = 1;
-  optional int32 height = 2;
-  optional int32 width = 3;
-  // the actual image data, in bytes
-  optional bytes data = 4;
-  optional int32 label = 5;
-  // Optionally, the datum could also hold float data.
-  repeated float float_data = 6;
-  // If true data contains an encoded image that need to be decoded
-  optional bool encoded = 7 [default = false];
+message TensorProto {
+  // The dimensions in the tensor.
+  repeated int32 dims = 1;
+  enum DataType {
+    FLOAT = 1;
+    INT32 = 2;
+    BYTE = 3;
+    STRING = 4;
+  }
+  optional DataType data_type = 2 [default = FLOAT];
+  repeated float float_data = 3 [packed = true];
+  repeated int32 int32_data = 4 [packed = true];
+  optional bytes byte_data = 5;
+  repeated bytes string_data = 6;
+  optional string name = 7;
+}
+
+message TensorProtos {
+  repeated TensorProto protos = 1;
+}
+
+message NetDef {
+  optional string name = 1; // the network's name
+  // Operators that the network contains.
+  repeated OperatorDef op = 2;
+
+  // net_type and net_args are implementation-specific parameters that we want
+  // to pass to specialized implementations. If you do not care about this, you
+  // don't need to set them.
+  optional string net_type = 3; // the type of network that we run this with.
+
+  // the number of workers, if the operators in the network is to be carried out
+  // in parallel.
+  optional int32 num_workers = 4 [deprecated=true];
+
+  // The device option for the network. If a network has a specific device
+  // option and one of its operators does not have it set, we will copy over the
+  // device option to the operator. This allows us to basically avoid putting
+  // device options at every operator.
+  optional DeviceOption device_option = 5;
+
+  repeated Argument arg = 6;
 }
