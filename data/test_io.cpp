@@ -11,19 +11,41 @@ int main(int argc, char* argv[]) {
     // Initialize Google's logging library.
     google::InitGoogleLogging(argv[0]);
 
-    string path="/home/yangwu/git/H-Net/data/inception_net.pb";
-    std::fstream input(path, ios::in | ios::binary);
+    string net_path="/home/yangwu/git/H-Net/data/inception_net.pb";
+    string tensors_path="/home/yangwu/git/H-Net/data/inception_tensors.pb";
 
+    std::fstream net_input(net_path, ios::in | ios::binary);
+    std::fstream tensors_input(tensors_path, ios::in | ios::binary);
+
+    // net is the network definition.
     NetDef netDef;
+    // tensors contain the parameter tensors.
+    TensorProtos tensors;
 
-    if (!input) {
-        std::cout << path << ": File not found." << std::endl;
-    } else if (!netDef.ParseFromIstream(&input)) {
-        std::cerr << "Failed to parse address book." << std::endl;
+    if (!net_input) {
+        LOG(ERROR) << net_path << ": File not found.";
         return -1;
     }
 
-    std::cout << "protbuf test pass" << std::endl;
+    if (!tensors_input) {
+        LOG(ERROR) << tensors_path << ": File not found.";
+        return -1;
+    }
+
+    if (!netDef.ParseFromIstream(&net_input)) {
+        LOG(ERROR) << "Failed to parse address book.";
+        return -1;
+    }
+
+    if (!netDef.ParseFromIstream(&net_input)) {
+        LOG(ERROR) << "Failed to parse address book.";
+        return -1;
+    }
+
+    LOG(INFO) << "protbuf test pass";
+
+    // Delete all global objects allocated by libprotobuf.
+    google::protobuf::ShutdownProtobufLibrary();
 
     return 0;
 }
