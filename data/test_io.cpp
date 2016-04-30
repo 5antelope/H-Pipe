@@ -9,6 +9,7 @@
 int main(int argc, char* argv[]) {
 
     // Initialize Google's logging library.
+    FLAGS_log_dir = "/home/yangwu/log";
     google::InitGoogleLogging(argv[0]);
 
     string net_path="/home/yangwu/git/H-Net/data/inception_net.pb";
@@ -23,26 +24,26 @@ int main(int argc, char* argv[]) {
     TensorProtos tensors;
 
     if (!net_input) {
-        LOG(ERROR) << net_path << ": File not found.";
+        std::cerr << net_path << ": File not found." << std::endl;
         return -1;
     }
 
     if (!tensors_input) {
-        LOG(ERROR) << tensors_path << ": File not found.";
+        std::cerr << tensors_path << ": File not found." << std::endl;
         return -1;
     }
 
     if (!netDef.ParseFromIstream(&net_input)) {
-        LOG(ERROR) << "Failed to parse address book.";
+        std::cerr << "Failed to parse address book." << std::endl;
         return -1;
     }
 
     if (!netDef.ParseFromIstream(&net_input)) {
-        LOG(ERROR) << "Failed to parse address book.";
+        std::cerr << "Failed to parse address book." << std::endl;
         return -1;
     }
 
-    LOG(INFO) << "protbuf test pass";
+    std::cout << "protbuf test pass" << std::endl;
 
     // Delete all global objects allocated by libprotobuf.
     google::protobuf::ShutdownProtobufLibrary();

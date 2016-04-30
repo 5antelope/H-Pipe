@@ -69,6 +69,6 @@ static bool matchExt(const std::string & fn, std::string en) {
         return true;
     if ( en == "jpg" && ext == "jpeg" )
         return true;
-    
+
     return false;
 }
