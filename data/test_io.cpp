@@ -5,6 +5,7 @@
 
 #include <google/protobuf/text_format.h>
 #include <google/protobuf/io/zero_copy_stream_impl.h>
+#include <google/protobuf/io/printer.h>
 
 int main(int argc, char* argv[]) {
 
@@ -38,12 +39,16 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    if (!netDef.ParseFromIstream(&net_input)) {
+    if (!tensors.ParseFromIstream(&tensors_input)) {
         std::cerr << "Failed to parse address book." << std::endl;
         return -1;
     }
 
     std::cout << "protbuf test pass" << std::endl;
+
+    // for (int i = 0; i < tensors._size(); i++) {
+    //
+    // }
 
     // Delete all global objects allocated by libprotobuf.
     google::protobuf::ShutdownProtobufLibrary();
