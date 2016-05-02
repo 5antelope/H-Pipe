@@ -30,6 +30,8 @@
 # Symbol link
 data/protoc
 
-.DS_Store
 CMakeLists.txt
+
+# CLion files
+.DS_Store
 .idea/*
