@@ -31,3 +31,5 @@
 data/protoc
 
 .DS_Store
+CMakeLists.txt
+.idea/*
