@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
     std::fstream tensors_input(tensors_path, ios::in | ios::binary);
 
     // net is the network definition.
-    NetDef netDef;
+    // NetDef netDef;
     // tensors contain the parameter tensors.
     TensorProtos tensors;
 
@@ -34,10 +34,10 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    if (!netDef.ParseFromIstream(&net_input)) {
-        std::cerr << "Failed to parse address book." << std::endl;
-        return -1;
-    }
+    // if (!netDef.ParseFromIstream(&net_input)) {
+    //     std::cerr << "Failed to parse address book." << std::endl;
+    //     return -1;
+    // }
 
     if (!tensors.ParseFromIstream(&tensors_input)) {
         std::cerr << "Failed to parse address book." << std::endl;

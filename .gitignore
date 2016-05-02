@@ -27,4 +27,7 @@
 *.out
 *.app
 
+# Symbol link
+data/protoc
+
 .DS_Store
