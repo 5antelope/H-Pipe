@@ -1,5 +1,5 @@
-#include "data.pb.h"
-#include "io.hpp"
+#include "caffe2.pb.h"
+#include "common.hpp"
 
 #include <string>
 #include <fcntl.h>
@@ -7,6 +7,8 @@
 #include <google/protobuf/text_format.h>
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/io/printer.h>
+
+using ::google::protobuf::Message;
 
 int main(int argc, char* argv[]) {
 
@@ -19,9 +21,9 @@ int main(int argc, char* argv[]) {
     std::fstream tensors_input(tensors_path, ios::in | ios::binary);
 
     // net is the network definition.
-    // NetDef netDef;
+    caffe2::NetDef netDef;
     // tensors contain the parameter tensors.
-    TensorProtos tensors;
+    caffe2::TensorProtos tensors;
 
     // if (!net_input) {
     //     std::cerr << net_path << ": File not found." << std::endl;
@@ -29,22 +31,18 @@ int main(int argc, char* argv[]) {
     // }
 
     if (!tensors_input) {
-        std::cerr << tensors_path << ": File not found." << std::endl;
+        printf("File not found.\n");
         return -1;
     }
 
-    // if (!netDef.ParseFromIstream(&net_input)) {
-    //     std::cerr << "Failed to parse address book." << std::endl;
-    //     return -1;
-    // }
+    netDef.ParseFromIstream(&net_input);
 
-    if (!tensors.ParseFromIstream(&tensors_input)) {
-        std::cerr << "Failed to parse address book." << std::endl;
-        return -1;
-    }
+    tensors.ParseFromIstream(&tensors_input);
 
-    printf("Load tensorProtos of size %d\n", tensors.size());
-    std::cout << "protbuf test pass" << std::endl;
+    std::cout << "Load netDef: " << netDef.name() << std::endl;
+    printf("Load tensorProtos of size %d\n", tensors.protos_size());
+
+    printf("protbuf test pass\n");
 
     // Delete all global objects allocated by libprotobuf.
     google::protobuf::ShutdownProtobufLibrary();
