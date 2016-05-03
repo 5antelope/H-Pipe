@@ -13,6 +13,8 @@ class Layer {
 
                 // Record the input layer
                 in_layer = in;
+
+                printf("in_layer=in\n");
             }
         }
 
@@ -29,7 +31,7 @@ class Layer {
 
         // Halide function that computes the output of the layer
         Func forward;
-        
+
         virtual ~Layer() {};
 };
 
@@ -44,14 +46,15 @@ class DataLayer: public Layer {
         Var x, y, z, n;
 
         DataLayer(int _in_w, int _in_h, int _in_ch, int _num_samples,
-                  Image<float> &data) : Layer(0) {
+                  Image<uint8_t> &data) : Layer(0) {
 
             in_w = _in_w;in_h = _in_w; in_ch = _in_ch;
 
             num_samples = _num_samples;
 
             // Define forward
-            forward(x, y, z, n) = data(x, y, z, n);
+            forward(x, y, z) = data(x, y, z);
+
         }
 
         int out_dims() { return 4; }

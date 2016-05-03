@@ -10,10 +10,12 @@ CXX=g++
 CXXFLAGS+=-g -fopenmp -Wall -Wextra -O2 -std=c++11
 
 INCLUDES = -I/home/15-418/Halide/include \
-   -I/home/15-418/protobuf-2.6.1/include
+		   -I/home/15-418/Halide/tools \
+		   -I/home/15-418/protobuf-2.6.1/include  \
+		   `pkg-config --cflags-only-I protobuf`
 
 # define library paths in addition to /usr/lib
-LDFLAGS = -L/home/15-418/Halide/bin -lHalide \
+LDFLAGS = -L/home/15-418/Halide/bin -lHalide -ldl\
 		  -L/home/15-418/protobuf-2.6.1/lib -lprotobuf \
 		  -L/afs/cs/academic/class/15418-s13/public/lib -lglog
 
@@ -33,7 +35,9 @@ dirs:
 
 test: layer_test.cpp layers.h
 		$(CXX) $(CXXFLAGS) layer_test.cpp data/data.pb.cc \
-			           -o layer_test.out $(LDFLAGS) $(INCLUDES)
+			           -o layer_test.out $(LDFLAGS) $(INCLUDES) $(EXTRA_SCRIPTS)
+conv: conv_test.cpp
+		$(CXX) $(CXXFLAGS) conv_test.cpp -o conv_test.out $(LDFLAGS) $(INCLUDES)
 
 clean:
 	rm -rf $(OBJDIR) *.out
