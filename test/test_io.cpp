@@ -48,6 +48,11 @@ int main(int argc, char* argv[]) {
 
     printf("kernel dims: %d, %d, %d, %d\n", kernel.width(), kernel.height(), kernel.channels(), kernel.extent(3));
 
+    assert(kernel.width()==kernel.height());
+    assert(kernel.extent(1)==7);
+    assert(kernel.extent(2)==kernel.channels());
+    assert(kernel.channels()==3);
+
     printf("protbuf test pass\n");
 
     // Delete all global objects allocated by libprotobuf.
