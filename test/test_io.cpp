@@ -14,14 +14,14 @@ int main(int argc, char* argv[]) {
 
 	google::InitGoogleLogging(argv[0]);
 
-    string net_path="/home/yangwu/git/H-Net/data/inception_net.pb";
+    // string net_path="/home/yangwu/git/H-Net/data/inception_net.pb";
     string tensors_path="/home/yangwu/git/H-Net/data/inception_tensors.pb";
 
-    std::fstream net_input(net_path, ios::in | ios::binary);
+    // std::fstream net_input(net_path, ios::in | ios::binary);
     std::fstream tensors_input(tensors_path, ios::in | ios::binary);
 
     // net is the network definition.
-    caffe2::NetDef netDef;
+    // caffe2::NetDef netDef;
     // tensors contain the parameter tensors.
     caffe2::TensorProtos tensors;
 
