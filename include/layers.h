@@ -66,7 +66,7 @@ class Layer {
         // size of layer in each dimensions; 0 <= i < out_dims()
         virtual int layer_extent(int i) = 0;
 
-        virtual Func run(Image<float> input) = data;
+        virtual Func run(Func input) = data;
 
         Layer() {};
         ~Layer() {};
