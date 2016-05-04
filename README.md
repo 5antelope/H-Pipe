@@ -1,3 +1,3 @@
-# H-Net
+# H-Pipe
 
-H-Net: An Inception Network in  [Halide](http://halide-lang.org/).
+H-Pipe: A framework for image pipelines in  [Halide](http://halide-lang.org/).

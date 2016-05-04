@@ -27,8 +27,10 @@ LIBS = -ldl
 
 EXTRA_SCRIPTS = `pkg-config --libs protobuf libpng`
 
+CCFILES = $(wildcard ./include/*.cpp) ./proto/caffe2.pb.cc
+
+# CCFILES += $(SRCDIR)/main.cpp
 OBJS=$(OBJDIR)/main
-CCFILES = $(SRCDIR)/main.cpp
 
 all: dirs $(OBJDIR)
 			$(CXX) $(CXXFLAGS) -o $(OBJS) $(CCFILES)
@@ -36,15 +38,8 @@ all: dirs $(OBJDIR)
 dirs:
 	mkdir -p $(OBJDIR)
 
-test: include/test_blob.cpp
-		$(CXX) $(CXXFLAGS) include/test_blob.cpp \
-			           -o test_blob.out $(LDFLAGS) $(INCLUDES) $(EXTRA_SCRIPTS)
-
 io: test/test_io.cpp
-	$(CXX) $(CXXFLAGS) $(INC) include/tensor2image.cpp proto/caffe2.pb.cc test/test_io.cpp -o test_io.out $(LDFLAGS) $(INCLUDES) $(EXTRA_SCRIPTS)
-
-conv: conv_test.cpp
-		$(CXX) $(CXXFLAGS) conv_test.cpp -o conv_test.out $(LDFLAGS) $(INCLUDES)
+	$(CXX) $(CXXFLAGS) $(INC) $(CCFILES) test/test_io.cpp -o test_io.out $(LDFLAGS) $(INCLUDES) $(EXTRA_SCRIPTS)
 
 clean:
 	rm -rf $(OBJDIR) *.out
