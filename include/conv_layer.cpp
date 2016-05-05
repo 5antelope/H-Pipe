@@ -1,7 +1,6 @@
 #include <string>
 
 #include "Halide.h"
-#include "layers.h"
 #include "conv_layer.h"
 
 using namespace Halide;
@@ -9,19 +8,21 @@ using namespace Halide;
 // TODO: how to pass parameters
 Convolutional::Convolutional(string _name,
         int _pad, int _stride, string _order) { // define input/output and stride, pad..
-    set_name(_name);
+    std::cout << "CONV LAYER" << std::endl;
+    // set_name(_name);
 
-    set_pad(_pad);
-    set_stride(_stride);
-    set_order(_order);
+    // set_pad(_pad);
+    // set_stride(_stride);
+    // set_order(_order);
+    std::cout << "CONV LAYER CONSTRUCTED" << std::endl;
 }
 
 void Convolutional::load_weight(Image<float> _weight) {
-    set_weight(kernel);
+    set_weight(_weight);
 }
 
 void Convolutional::load_bias(Image<float> _bias) {
-    set_bias(kernel);
+    set_bias(_bias);
 }
 
 Func
@@ -35,18 +36,26 @@ Convolutional::run(Func input, int input_width, int input_height, int input_chan
     int output_channels = weight.extent(3);
     int output_num = input_num;
 
-    set_width(output_width);
-    set_height(output_height);
-    set_channels(output_channels);
+    set_output_width(output_width);
+    set_output_height(output_height);
+    set_output_channels(output_channels);
     set_output_num(output_num);
+
+    std::cout << "SET CONV LAYER" << std::endl;
 
     /* Clamped at boundary */
     Func clamped = BoundaryConditions::constant_exterior(input, 0.f, 0, input_width, 0, input_height);
 
+    std::cout << "BOUNDED" << std::endl;
+
     RDom r(0, kernel_size, 0, kernel_size, 0, input_channels);
 
-    data(x, y, z, n) = sum(filter(r.x, r.y, r.z, z) *
+    data(x, y, z, n) = sum(weight(r.x, r.y, r.z, z) *
              clamped(x * stride + r.x - pad, y * stride + r.y - pad, r.z, n));
+
+    data(x, y, z, n) += bias(z);
+
+    std::cout << "READY TO PARALLEL" << std::endl;
 
     data.parallel(z);
 

@@ -27,7 +27,7 @@ class Layer {
 
         void set_output_height(int _height) { output_height = _height;}
 
-        void set_output_channels(int _channel) { output_channels = _channel;}
+        void set_output_channels(int _channel) { output_channel = _channel;}
 
         void set_output_num(int _output_num) { output_num = _output_num;}
 
@@ -49,13 +49,13 @@ class Layer {
         // 4 Halide parameters for Func data
         Var x, y, z, n;
 
+        Layer() {}
+        ~Layer() {}
         // number of layer dimensions
-        virtual int layer_dims() = 0;
+        // virtual int layer_dims() = 0;
         // size of layer in each dimensions; 0 <= i < out_dims()
-        virtual int layer_extent(int i) = 0;
+        // virtual int layer_extent(int i) = 0;
 
-        virtual Func run(Func input);
+        Func run(Func input);
 
-        Layer() {};
-        ~Layer() {};
 };
