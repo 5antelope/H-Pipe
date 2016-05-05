@@ -14,10 +14,10 @@ LoadImageFromTensor(const caffe2::TensorProto *tensor) {
     int num = 1;
 
     if (tensor->dims_size() == 4) {
-        num = tensor->dims(0);
+        channel = tensor->dims(0);
         width = tensor->dims(1);
         height = tensor->dims(2);
-        channel = tensor->dims(3);
+        num = tensor->dims(3);
     } else {
         // only 1 dim:
         // one bias per channel

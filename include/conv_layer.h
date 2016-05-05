@@ -8,9 +8,7 @@ class Convolutional: public Layer {
 
     public:
 	    int stride = 0, pad = 0;
-
-        caffe2::TensorProto tensor;
-        caffe2::OperatorDef op;
+        string order;
 
 	    // filter and bias for convlution.
 	    // should be set from outside
@@ -26,9 +24,11 @@ class Convolutional: public Layer {
         // run the real network
         Func run(Func, int, int, int, int);
 
-        void set_tensor(caffe2::TensorProto _tensor) {tensor = _tensor;}
-        void set_op(caffe2::OperatorDef _op) {op = _op;}
-
+        void laod_tensor(const caffe2::TensorProto* _tensor);
         void set_weight(Image<float> _weight) {weight = _weight;}
         void set_bias(Image<float> _bias) {bias = _bias;}
+
+        void set_stride(int _stride) {stride = _stride;}
+        void set_pad(int _pad) {pad = _pad;}
+        void set_order(string _order) {order = _order;}
 };

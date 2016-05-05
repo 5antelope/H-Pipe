@@ -8,14 +8,20 @@ using namespace Halide;
 
 // TODO: how to pass parameters
 Convolutional::Convolutional(string _name,
-        const caffe2::TensorProto *_tensor, // define filter
-        const caffe2::OperatorDef *_op) { // define input/output and stride, pad..
+        int _pad, int _stride, string _order) { // define input/output and stride, pad..
     set_name(_name);
 
-    set_tensor(_tensor);
-    set_op(_op);
+    set_pad(_pad);
+    set_stride(_stride);
+    set_order(_order);
+}
 
-    set_output_num(tensor.dims(0));
+void Convolutional::load_weight(Image<float> _weight) {
+    set_weight(kernel);
+}
+
+void Convolutional::load_bias(Image<float> _bias) {
+    set_bias(kernel);
 }
 
 Func
@@ -25,8 +31,8 @@ Convolutional::run(Func input, int input_width, int input_height, int input_chan
 
     int output_width = (input_width  - kernel_size + 2 * pad) / stride + 1;
     int output_height = (input_height - kernel_size + 2 * pad) / stride + 1;
-    // output channel should be number of filters
-    int output_channels = get_output_num();
+    // output channel should be number of filters?
+    int output_channels = weight.extent(3);
     int output_num = input_num;
 
     set_width(output_width);
@@ -48,20 +54,3 @@ Convolutional::run(Func input, int input_width, int input_height, int input_chan
 
 }
 
-int layer_dims() { return 4; }
-
-int layer_extent( int i) {
-    assert(i < 4);
-
-    if (i == 0)
-        return -1;
-    else if (i == 1)
-        return -1;
-    else if (i == 2)
-        return -1;
-    else if (i == 3)
-        return -1;
-
-    // error
-    return -1;
-}
