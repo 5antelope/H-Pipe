@@ -41,6 +41,9 @@ dirs:
 io: test/test_io.cpp
 	$(CXX) $(CXXFLAGS) $(INC) $(CCFILES) test/test_io.cpp -o test_io.out $(LDFLAGS) $(INCLUDES) $(EXTRA_SCRIPTS)
 
+conv: dirs
+	$(CXX) $(CXXFLAGS) $(INC) $(CCFILES) test/test_conv.cpp -o $(OBJDIR)/test_conv.out $(LDFLAGS) $(INCLUDES) $(EXTRA_SCRIPTS)
+
 clean:
 	rm -rf $(OBJDIR) *.out
 

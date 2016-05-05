@@ -1,34 +1,35 @@
+#include "caffe2.pb.h"
+
 #include "Halide.h"
 
+using namespace Halide;
+
 class Convolutional: public Layer {
-	
-	int pad, stride;
+
+	int stride, pad;
 
 	// filter and bias for convlution.
 	// should be set from outside
-	Image<float> filter, bias;
+	Image<float> filter;
+    // Image<float> bias;
 
     public:
     	// TODO: how to pass parameters
-        Convolutional(string _name, int schedule=false) {
+        Convolutional(string _name,
+                const caffe2::TensorProto *tensor, // define filter
+                const caffe2::OperatorDef *ops); // define input/output and stride, pad..
 
-        }
+        /*
+         * This constructor is used for correctness test purpose
+         * Pass in filter and stride, pad parameters directly for conv layer
+         */
+        Convolutional(string _name,
+                Image<float> _filter,
+                int _stride, int _pad);
 
-        int layer_dims() { return 4; }
+        Func run(Func, int, int, int, int);
 
-        int layer_extent( int i) {
-            assert(i < 4);
+        int layer_dims();
 
-            if (i == 0)
-                return get_width();
-            else if (i == 1)
-                return get_height();
-            else if (i == 2)
-                return get_channels();
-            else if (i == 3)
-                return get_batch();
-
-            // error
-            return -1;
-        }
+        int layer_extent(int i);
 };
