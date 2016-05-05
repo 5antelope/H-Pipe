@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Loaded operators of size: " << netDef.op_size() << std::endl;
 
-    caffe2::OperatorDef operator = netDef.op(0);
+    const caffe2::OperatorDef& operator = netDef.op(0);
     std::cout << "Net name: " << operator.name() << std::endl;
 
     Halide::Image<float> kernel = LoadImageFromTensor(&tensors.protos(0));

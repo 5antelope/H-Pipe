@@ -7,45 +7,47 @@ class Layer {
     public:
         string name;
         string type;
-        // dims
-        int width;
-        int height;
-        int channels;
-        int batch;
+
+        int input_width;
+        int input_height;
+        int input_channel;
+        int input_num;
+
+        int output_width;
+        int output_height;
+        int output_channel;
+        int output_num;
 
         // getter setter of private fields
         void set_name(string _name) { name = _name;}
 
         void set_type(string _type) { type = _type;}
 
-        void set_width(int _width) { width = _width;}
+        void set_output_width(int _width) { output_width = _width;}
 
-        void set_height(int _height) { height = _height;}
+        void set_output_height(int _height) { output_height = _height;}
 
-        void set_channels(int _channel) { channels = _channel;}
+        void set_output_channels(int _channel) { output_channels = _channel;}
 
-        void set_batch(int _batch) { batch = _batch;}
+        void set_output_num(int _output_num) { output_num = _output_num;}
 
         string get_name() { return name;}
 
         string get_type() { return type;}
 
-        int get_width() { return width; }
+        int get_output_width() { return output_width; }
 
-        int get_height() { return height;}
+        int get_output_height() { return output_height;}
 
-        int get_channels() { return channels;}
+        int get_output_channels() { return output_channel;}
 
-        int get_batch() { return batch; }
+        int get_output_num() { return output_num; }
 
         // the output of layer
         Func data;
 
         // 4 Halide parameters for Func data
         Var x, y, z, n;
-
-        // storage for layer parameters
-        std::vector<Image<float>> params;
 
         // number of layer dimensions
         virtual int layer_dims() = 0;
