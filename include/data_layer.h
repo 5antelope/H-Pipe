@@ -18,7 +18,7 @@ public:
     num_samples = _num_samples;
 
     // Define forward
-    forward(x, y, z, n) = data(x, y, z, n);
+    forward(x, y, z, n) = data(x, y, z);
 
   }
 
