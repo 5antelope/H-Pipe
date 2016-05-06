@@ -32,8 +32,9 @@ public:
     in_w = in_layer->out_dim_size(0);
     reg = _reg;
 
-    assert((in_h + 2 * _pad - _f_h) % _stride == 0);
-    assert((in_w + 2 * _pad - _f_w) % _stride == 0);
+    printf("ASSERT (%d + 2 * %d - %d) mod %d\n", in_h, _pad, _f_h, _stride);
+    // assert((in_h + 2 * _pad - _f_h) % _stride == 0);
+    // assert((in_w + 2 * _pad - _f_w) % _stride == 0);
 
     num_f = _num_f;
     f_h = _f_h;

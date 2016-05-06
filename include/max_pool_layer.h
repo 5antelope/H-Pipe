@@ -24,8 +24,8 @@ public:
     in_h = in_layer->out_dim_size(1);
     in_w = in_layer->out_dim_size(0);
 
-    assert((in_h - _p_h) % _stride == 0);
-    assert((in_w - _p_w) % _stride == 0);
+    // assert((in_h - _p_h) % _stride == 0);
+    // assert((in_w - _p_w) % _stride == 0);
 
     p_w = _p_w;
     p_h = _p_h;
