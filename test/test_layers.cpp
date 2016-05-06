@@ -5,9 +5,32 @@
 
 int main(int argc, char **argv) {
 
+	// Google logging needed for parts that were extracted from
+	// caffe
+
+	// Network structure
+	// data - conv - reLU - pool - fc - softmax
+
 	std::vector<Layer*> network;
 	float reg = 0.001;
-	// caffe
+
+	// Description of the neural network
+
+	int N = 64; // number of samples/batch_size
+	int d_w = 32; // data width
+	int d_h = 32; // data height
+	int ch = 3; // number of channels
+
+	Image<float> data(d_w, d_h, ch, N);
+	Image<int> labels(N);
+
+
+	DataLayer * d_layer = new DataLayer(d_h, d_w, ch, N, data);
+	network.push_back(d_layer);
+	printf("data out size %d x %d x %d x %d\n", d_layer->out_dim_size(0),
+												d_layer->out_dim_size(1),
+												d_layer->out_dim_size(2),
+												d_layer->out_dim_size(3));
 	int n_f = 32; // number of filters
 	int f_w = 7;  // filter width
 	int f_h = 7;  // filter height
@@ -15,34 +38,18 @@ int main(int argc, char **argv) {
 	int stride = 1; // stride at which the filter evaluated
 
 	Convolutional * conv  = new Convolutional(n_f, f_w, f_h, pad,
-											  stride, reg, NULL);
+											  stride, reg, d_layer);
 	network.push_back(conv);
 	printf("conv out size %d x %d x %d x %d\n", conv->out_dim_size(0),
 												conv->out_dim_size(1),
 												conv->out_dim_size(2),
 												conv->out_dim_size(3));
 
-	ReLU * relu = new ReLU(conv);
-	network.push_back(relu);
-
-	int p_w = 2; // pooling width
-	int p_h = 2; // pooling height
-	int p_stride = 2; // pooling stride
-
-	MaxPooling * pool = new MaxPooling(p_w, p_h, p_stride, relu);
-	network.push_back(pool);
-	printf("pool out size %d x %d x %d x %d\n", pool->out_dim_size(0),
-												pool->out_dim_size(1),
-												pool->out_dim_size(2),
-												pool->out_dim_size(3));
-
-	
-	SoftMax * softm = new SoftMax(NULL);
-	network.push_back(softm);
-	printf("softm out size %d x %d\n", softm->out_dim_size(0),
-									   softm->out_dim_size(1));
 
 	printf("test pass");        
+	
+
+	return 0;       
 	
 
 }
