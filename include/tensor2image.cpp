@@ -8,10 +8,10 @@ using namespace Halide;
 
 Image<float>
 LoadImageFromTensor(const caffe2::TensorProto& tensor) {
-    int width = 1;
-    int height = 1;
-    int channel = 1;
-    int num = 1;
+    int width = 0;
+    int height = 0;
+    int channel = 0;
+    int num = 0;
 
     if (tensor.dims_size() == 4) {
         channel = tensor.dims(0);
@@ -21,6 +21,7 @@ LoadImageFromTensor(const caffe2::TensorProto& tensor) {
     } else {
         // only 1 dim:
         // one bias per channel
+        std::cout << "channel = " << tensor.dims(0) << std::endl;
         channel = tensor.dims(0);
     }
 
@@ -42,6 +43,7 @@ LoadImageFromTensor(const caffe2::TensorProto& tensor) {
         }
     }
     else {// dim size = 1
+        std::cout << "Tensor has 1 dim" << std::endl;
         for (int c=0; c<channel; c++) {
             image(1, 1, c, 1) = tensor.float_data(idx);
             idx += 1;

@@ -9,11 +9,11 @@ using namespace Halide;
 Convolutional::Convolutional(string _name,
         int _pad, int _stride, string _order) { // define input/output and stride, pad..
     std::cout << "CONV LAYER" << std::endl;
-    // set_name(_name);
+    set_name(_name);
 
-    // set_pad(_pad);
-    // set_stride(_stride);
-    // set_order(_order);
+    set_pad(_pad);
+    set_stride(_stride);
+    set_order(_order);
     std::cout << "CONV LAYER CONSTRUCTED" << std::endl;
 }
 
@@ -25,16 +25,20 @@ void Convolutional::load_bias(Image<float> _bias) {
     set_bias(_bias);
 }
 
-Func
-Convolutional::run(Func input, int input_width, int input_height, int input_channels, int input_num) {
+Halide::Func
+Convolutional::run(Halide::Func input, int input_width, int input_height, int input_channels, int input_num) {
+    std::cout << "RUN" << std::endl;
     // assume width = height for filter
     int kernel_size = weight.width();
 
+    printf("NUM: (%d - %d + 2*%d) / %d + 1\n", input_width, kernel_size, pad, stride);
     int output_width = (input_width  - kernel_size + 2 * pad) / stride + 1;
     int output_height = (input_height - kernel_size + 2 * pad) / stride + 1;
     // output channel should be number of filters?
     int output_channels = weight.extent(3);
     int output_num = input_num;
+
+    std::cout << "GOING TO SET CONV LAYER" << std::endl;
 
     set_output_width(output_width);
     set_output_height(output_height);
@@ -44,7 +48,7 @@ Convolutional::run(Func input, int input_width, int input_height, int input_chan
     std::cout << "SET CONV LAYER" << std::endl;
 
     /* Clamped at boundary */
-    Func clamped = BoundaryConditions::constant_exterior(input, 0.f, 0, input_width, 0, input_height);
+    Halide::Func clamped = Halide::BoundaryConditions::constant_exterior(input, 0.f, 0, input_width, 0, input_height);
 
     std::cout << "BOUNDED" << std::endl;
 
