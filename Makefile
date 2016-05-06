@@ -15,12 +15,14 @@ INCLUDES = -I./include \
 		   -I/home/15-418/Halide/tools \
 		   -I/home/15-418/protobuf-2.6.1/include  \
 		   -I/home/yangwu/git/H-Net/proto \
+		   -I/home/15-418/gflags-2.1.2/include \
 		   `pkg-config --cflags-only-I protobuf`
 
 # define library paths in addition to /usr/lib
 LDFLAGS = -L/home/15-418/Halide/bin -lHalide -ldl\
 		  -L/home/15-418/protobuf-2.6.1/lib -lprotobuf \
-		  -L/afs/cs/academic/class/15418-s13/public/lib -lglog
+		  -L/afs/cs/academic/class/15418-s13/public/lib -lglog \
+		  -L/home/15-418/gflags-2.1.2/lib -lgflags
 
 # define any libraries to link into executable:
 LIBS = -ldl
@@ -35,15 +37,14 @@ OBJS=$(OBJDIR)/main
 all: dirs $(OBJDIR)
 			$(CXX) $(CXXFLAGS) -o $(OBJS) $(CCFILES)
 
-test: dirs 
-			$(CXX) $(CXXFLAGS) $(INC) $(CCFILES)  test/test_layers.cpp -o $(OBJDIR)/test_layer.out $(LDFLAGS) $(INCLUDES) $(EXTRA_SCRIPTS)
-
-
 dirs:
 	mkdir -p $(OBJDIR)
 
 io: test/test_io.cpp
 	$(CXX) $(CXXFLAGS) $(INC) $(CCFILES) test/test_io.cpp -o test_io.out $(LDFLAGS) $(INCLUDES) $(EXTRA_SCRIPTS)
+
+test: dirs
+	$(CXX) $(CXXFLAGS) $(INC) $(CCFILES) test/test_layers.cpp -o $(OBJDIR)/test_layer.out $(LDFLAGS) $(INCLUDES) $(EXTRA_SCRIPTS)
 
 clean:
 	rm -rf $(OBJDIR) *.out

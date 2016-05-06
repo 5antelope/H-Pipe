@@ -4,7 +4,6 @@
 using namespace std;
 using namespace Halide;
 
-
 class Layer {
 public:
   //Default Constructor...should support other popular input

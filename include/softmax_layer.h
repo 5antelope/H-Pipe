@@ -1,4 +1,3 @@
-#include "layers.h"
 
 class SoftMax : public Layer {
 public:

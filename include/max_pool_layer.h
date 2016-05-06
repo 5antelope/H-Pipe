@@ -1,5 +1,4 @@
 #include "Halide.h"
-#include "layers.h"
 
 class MaxPooling : public Layer {
 public:

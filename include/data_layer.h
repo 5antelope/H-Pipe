@@ -1,4 +1,3 @@
-#include "layer.h"
 
 class DataLayer : public Layer {
 
@@ -12,7 +11,7 @@ public:
 
   DataLayer(int _in_w, int _in_h, int _in_ch, int _num_samples,
             Image<float> &data) : Layer(0) {
-  	
+
     in_w = _in_w;
     in_h = _in_w;
     in_ch = _in_ch;
@@ -20,6 +19,7 @@ public:
 
     // Define forward
     forward(x, y, z, n) = data(x, y, z, n);
+
   }
 
   // Nothing to propagate

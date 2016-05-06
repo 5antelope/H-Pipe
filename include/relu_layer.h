@@ -1,5 +1,4 @@
 #include "Halide.h"
-#include "layers.h"
 
 class ReLU : public Layer {
 public:
