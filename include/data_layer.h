@@ -10,7 +10,7 @@ public:
   Var x, y, z, n;
 
   DataLayer(int _in_w, int _in_h, int _in_ch, int _num_samples,
-            Image<float> &data) : Layer(0) {
+            Func data) : Layer(0) {
 
     in_w = _in_w;
     in_h = _in_w;

@@ -48,15 +48,17 @@ int main(int argc, char **argv) {
 	float reg = 0.001;
 
 
-    Halide::Image<float> data = load_image("/home/yangwu/git/H-Pipe/dog.png");
+    Halide::Image<float> data_origin = load_image("/home/yangwu/git/H-Pipe/dog.png");
 
     /***** DATA LAYER  *****/
-	int d_w = data.extent(0); // data width
-	int d_h = data.extent(1); // data height
-	int ch  = data.extent(2); // number of channels
+	int d_w = 32; // data width
+	int d_h = 32; // data height
+	int ch  = 3; // number of channels
 	int N   = 1; // number of samples
 
 	Image<int> labels(N);
+
+    Func data = BoundaryConditions::constant_exterior(data_origin, 0.f, 0, d_w, 0, d_h);
 
 	DataLayer * d_layer = new DataLayer(d_h, d_w, ch, N, data);
 	network.push_back(d_layer);
