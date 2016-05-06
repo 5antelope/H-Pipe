@@ -48,7 +48,8 @@ Convolutional::run(Halide::Func input, int input_width, int input_height, int in
     std::cout << "SET CONV LAYER" << std::endl;
 
     /* Clamped at boundary */
-    Halide::Func clamped = Halide::BoundaryConditions::constant_exterior(input, 0.f, 0, input_width, 0, input_height);
+    Func clamped = BoundaryConditions::constant_exterior(
+                  input, 0.f, 0, input_width, 0, input_height);
 
     std::cout << "BOUNDED" << std::endl;
 
