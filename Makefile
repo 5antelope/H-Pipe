@@ -35,6 +35,10 @@ OBJS=$(OBJDIR)/main
 all: dirs $(OBJDIR)
 			$(CXX) $(CXXFLAGS) -o $(OBJS) $(CCFILES)
 
+test: dirs 
+			$(CXX) $(CXXFLAGS) $(INC) $(CCFILES)  test/test_layers.cpp -o $(OBJDIR)/test_layer.out $(LDFLAGS) $(INCLUDES) $(EXTRA_SCRIPTS)
+
+
 dirs:
 	mkdir -p $(OBJDIR)
 
