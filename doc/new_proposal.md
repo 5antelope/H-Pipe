@@ -1,10 +1,14 @@
-# H-Piper: A Deep Learning 
+# H-Piper: A Deep Learning Framework in Halide
 \- Lei Sun, Yang Wu
 
 ### SUMMARY
-**DPSTNet** is our final project for 15418.
+**H-Piper** is our final project for 15418.
 
-We are going to find the optimal implementations of *Spatial transformer networks* on heterogeneous platforms with both [Halide](http://halide-lang.org/) and our manually-tuned implementation. Embedded our transformer to a CNN graphic pipeline, and compare/analyse performance on the tasks like LeNet-5 or maybe other open datasets.
+We are going to build a powerful, flexible, generic,and highly-balanced framework for deep learning Nets, in [Halide](http://halide-lang.org/). We named our framework **H-Piper**. We will embed popular neural networks like VGG, CNN, and Google Inception Net in our framework and we enable user to define own Neural Networks by privoding a simple configuration files. We will extend our input processor to support popular inputs like protobuf, json, and etc.
+
+If time permits, we'd like to hand-tune our framework schedule (Halide's feature) and compete with Caffe and MXNet. Also, we could leverage the existing Halide Auto-Scheduler developed by Ravi to generate an automatic schedule to compete with Caffe and MXNet. 
+
+Our framework will be extremely useful for Halide Auto-scheduler to test their performance on different Neural Net and it will be a great performance reference for users who are interested in getting higher performance.
 
 ### BACKGROUND
 The traditional CNN limited by the lack of ability to be spatially invariant to the input data
