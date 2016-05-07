@@ -4,30 +4,32 @@
 ### SUMMARY
 **H-Piper** is our final project for 15418.
 
-We are going to build a powerful, flexible, generic,and highly-balanced framework for deep learning Nets, in [Halide](http://halide-lang.org/). We named our framework **H-Piper**. We will embed popular neural networks like VGG, CNN, and Google Inception Net in our framework and we enable user to define own Neural Networks by privoding a simple configuration files. We will extend our input processor to support popular inputs like protobuf, json, and etc.
+We are going to build a powerful, flexible, generic, and highly-balanced framework for deep learning Nets, in [Halide](http://halide-lang.org/). We named our framework **H-Piper**. We will embed popular neural networks like VGG, CNN, and Google Inception Net in our framework and we enable user to define own Neural Networks by privoding a simple configuration files. We will extend our input processor to support popular inputs like protobuf, json, and etc.
 
 If time permits, we'd like to hand-tune our framework schedule (Halide's feature) and compete with Caffe and MXNet. Also, we could leverage the existing Halide Auto-Scheduler developed by Ravi to generate an automatic schedule to compete with Caffe and MXNet. 
 
 Our framework will be extremely useful for Halide Auto-scheduler to test their performance on different Neural Net and it will be a great performance reference for users who are interested in getting higher performance.
 
 ### BACKGROUND
-The traditional CNN limited by the lack of ability to be spatially invariant to the input data
-in a computationally and parameter efficient manner. There are some extra work that needs to be done in steps like *MAX-POLL* layer to offset the affects from rotation, scale or shift. But that needs more deeper layers. What we want to achieve from Spatial transformer networks is a 'corrected' input after localization and transformations. 
 
-This transform also requires a *localisation net* to train transformation parameters, which is by itself a CNN network. Therefore, this procedure involves matrix computation, convolution integral and backpropagation to turn parameters. All these steps can use parallel to speed up. 
+MXNet and Caffe are the most popular frameworks for deep learning. Both frameworks are implemented in cpp and are carefully hand-tuned. Hand-tuning in cpp could be painful. Changes' correctness needs to be verified everytime and the amount of changes for the most simple reschedule is a lot. 
 
-NOTE: *This is our current ideas on some potential steps that can be benefit from parallel, might adjust later.*
+Halide is a new programming language designed to make it easier to write high-performance image processing code on modern machines. It provides a concept of "scheduling" which allows developers to easily define he or she wants to iterate through the dataset. The amount to be changed is quite trivial. The correctness will be not affected heavily if only the schedule is changed. 
+
+It's always interesting to explore the best tradeoff between parallelism and locality. With Halide, developers could explore the best tradeoff much faster with less frastration. 
+
+[PolyMage](http://drona.csa.iisc.ernet.in/~uday/publications/uday15asplos.pdf) focus on automatically generating high-performance implementations of image processing pipelines expressed in a high-level declarative language. "Experimental results on a modern multicore system show that the performance achieved by our automatic approach is up to 1.81× better than that achieved through manual tuning in Halide, a state-of-the-art language and compiler for image processing pipelines."
 
 ### THE CHALLENGE
-First of all, we need to learn theories and algorithm behind neural networks, which is new to us. CNN itself is complicated and the paper described the idea is pretty new.
-
-Second, we need to adopt different opensource implememtation and try to find parallelism, locatlity, or less duplicated work in those implementation to see if we could implement the algorithm in the most optimized way.
-
-Last, we will implement this in [Halide](http://halide-lang.org/). Halide's a new programming language came out in 2011/2012, there could be some un-implemented and important features for our project.
+1. We need to figure out the scope of our framework. Surely we want to be general enough and support everything but given the fact that we only have couple of weeks to build this. It might not be as general as Caffe or MXNet.
+2. We need to explore the locality possibilities between two layers in any neural network. To check if we could fuse two layres together and the compare the performance.
+3. Consumer different type of inputs and provide APIs to make it easy for use to migrate to our Framework.
+4. Primitives of our framework needs to be carefully designed to allow user define a pipeline or customized neural net easily.
+5. There might be some difficulties to get auto-schedule from PolyMage since we don't have it in control. At the end, we might have to bear with our hand-tune performance. 
 
 **WORKLOAD**
 
-And we think the cache footprint would be pretty huge in convolution, although the convolution step does not have strong dependency, locality in convolution won't affect too much. We think there should be some optimization in terms of how to explore the footprint in memory. 
+And we think the cache footprint would be pretty huge in convolution, although the convolution step does not have strong dependency, locality in convolution won't affect too much. We think there should be some optimization in terms of how to explore the footprint in memory and Halide makes it easy to define the way we want to handle the workload.
 
 Also the backpropagation could be requires intensive computation and some intermeida differential result for chain rule.
 
@@ -39,40 +41,35 @@ Also, if we add padding in matrix to avoid the data shrink too quickly, there ca
 
 
 ### RESOURCES
-We are going to use GHC machines, and start form scratch in Halide. The idea comes from Google's paper: [Spatial transformer networks](http://arxiv.org/pdf/1506.02025v3.pdf). There are some implementation in [Caffe](https://github.com/XiaoxiaoGuo/caffe-stn) and [Python](https://github.com/skaae/recurrent-spatial-transformer-code), we will try to compete their performance. 
+We are going to use GHC machines, and start form scratch in Halide. We will implement[Google Inception Net](http://www.cs.unc.edu/~wliu/papers/GoogLeNet.pdf) first. There are some implementation in [Caffe](https://github.com/XiaoxiaoGuo/caffe-stn) and [Python](https://github.com/skaae/recurrent-spatial-transformer-code), we will try to compete their performance. 
 
-[Here](http://gitxiv.com/posts/5WTXTLuEA4Hd8W84G/spatial-transformer-networks) has some helpful links.
+[This Git](https://github.com/google/inception) has some helpful informations about how to implement this net.
 
 More reference will be added if we find some useful reference paper/implementations. 
 
 ### GOALS AND DELIVERABLES
 <!-- Describe the deliverables or goals of your project. -->
 **PLAN TO ACHIEVE**
+1. A Working Google Inception Net in Halide
+2. A working deep learning framework in Halide which supports CNN, Inception Net, and VGG.
 
-We plan to implemented a *Spatial transformer networks* in Halide that improve the performance of CNN network on some well-known tasks. 
-
-In the demo, we want to run a comparison between plain CNN and our DPSTNet on LeNet-5 dataset *(maybe)* and see if there is an improvement in speed without lose accuracy. And also, we want to show how we design and decouple the problem that fully-explored the parallel potential of the transformer problem.
 
 **HOPE TO ACHIEVE**
 
-If the project goes well, we could also improve CNN itself in Halide and see if there is any  components that we can make parallel to speedup.
+1. Automatic Schedule generated by PolyMage and the speedup observed from hand-tuned version.
+2. Performance compete with Caffe, MXNet on Inception Net, VGG, CNN, and etc.
 
 ### PLATFORM CHOICE
-We choose to use GHC machines as our platform and Halide as our language.
-
-For platform, we want our implementation to be general enough that can be plugable to everyone else's CNN application instead of stick to some hardware requirements. Also, in order to have a consistent development environment within team, we choose to jsut use GHC cluster.
+We choose to use lateday clusters as our platform and Halide as our language.
 
 As for Halide language. First of all, it is a DSL for image processing, which gives it advantages in this project as we are using image data set; also the tuning producure can be more easier and efficient in Halide than other languages like C++: by only defineing schedule, we can try more configures in short time. And as Professor Kayvon shows, it is usually faster to find optimal settings in Halide.
-
 
 ### SCHEDULE
 
 | Timeline  | Goal to achieve | 
 |:----------:|:--------------| 
-| April 8th  | Understand of mechanism behind the transformer and implemented a serial version of Spatial transformer networks in Halide | 
-| April 15th | Connect Halide implementation to following graphic piple line on LeNet-5 dataset| 
-| April 22nd | Analise the dependecy of transformer and the relation of following pipelines and build a prototype of prarllel version in Halide |
-| April 29th | A working parallel version of transformer and tune different schedule to improve performance |
+| April 8th  | Understand Google Inception Net's Layers and how does they work| 
+| April 15th | Scratch the framework and define primitives| 
+| April 22nd | Implement the framework in Halide and test on CIFAR-10 dataset |
+| April 29th | Tune different schedule to improve performance, contact PolyMage for automatic shedule, and compete with Caffe and MXNet |
 | May 7th    | Wrap up implementatin and compare/analyse the performance in report |
-
-NOTE: *The work in week of April 8th and 15th might to working together, since the learning curve for CNN and backpropagation is pretty steep. But should have a working implementation of pipeline in Halide by April 15th.*
