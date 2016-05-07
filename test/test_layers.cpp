@@ -85,7 +85,7 @@ int main(int argc, char **argv) {
 	int pad = conv_op.arg(2).i(); // padding required to handle boundaries
 	int stride = conv_op.arg(0).i(); // stride at which the filter evaluated
 
-	Convolutional * conv  = new Convolutional(n_f, f_w, f_h, pad,
+	Convolutional* conv  = new Convolutional(n_f, f_w, f_h, pad,
 											  stride, reg, d_layer);
     conv->params[0] = conv_k;
     conv->params[1] = conv_b;

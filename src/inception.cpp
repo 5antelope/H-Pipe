@@ -43,15 +43,19 @@ int main(int argc, char **argv) {
     tensor.ParseFromIstream(&tensors_input);
 
     // key: name of network
-    // value: output of network
-    map<string, Func> net_output;
+    // value: layer of network
+    map<string, Layer*> net_output;
+    // key: name of tensor
+    // value: tensor protobuf
+    map<string, const caffe2::TensorProto&> net_tensor;
 
 	std::vector<Layer*> network;
 	float reg = 0.001;
 
     Halide::Image<float> data_origin = load_image("/home/yangwu/git/H-Pipe/dog.png");
 
-    /***** DATA LAYER  *****/
+    /********** DATA LAYER  **********/
+
 	int d_w = 32; // data width
 	int d_h = 32; // data height
 	int ch  = 3; // number of channels
@@ -63,25 +67,133 @@ int main(int argc, char **argv) {
 	DataLayer * data_layer = new DataLayer(d_h, d_w, ch, N, data);
     net_output["input"] = data_layer;
 
+    /********** DEFINED LAYERS **********/
+
     int tensor_idx= 0;
 
     for (int net_idx=0; net_idx<netDef.op_size(); net_idx++) {
         // iterate all inputs, check in net_output.
         // if not found, read from tensors.
         // define/save output with name to net_output for other functions
+
         const caffe2::OperatorDef op_def = netDef.op(net_idx);
+        
+        Layer* input;
 
         if (op_def.type() == "Conv") {
+            const caffe2::TensorProto* t1, t2;
+
+            string input_name = op_def.input(0);
+            string output_name = op_def.output(0);
+
+            if (net_output.find(input_name) == net_output.end()) {
+                // input layer MUST already exist
+                std::cout << "LAYER INPUT IS NOT READY" << std::endl;
+                return -1;
+            }
+
+            input = net_output[input_name];
+
+            string w_name = op_def.input(1);
+            string b_name = op_def.input(2);
+
+            int count = 0;
+            // do we need to iterate from beginning every time?
+            for (tensor_idx=0; tensor_idx<tensor.protos_size(); tensor_idx++) {
+                if (tensor.protos(tensor_idx).name() == w_name) {
+                    t1 = tensor.protos(tensor_idx);
+                    net_tensor[w_name] = t1;
+                    count++;
+                    continue;
+                }
+                else if (tensor.protos(tensor_idx).name() == b_name) {
+                    t2 = tensor.protos(tensor_idx);
+                    net_tensor[b_name] = t2;
+                    count++;
+                    continue;
+                }
+
+                if (count == 2)
+                    break;
+           }
+
+           Layer l = build_conv(t1, t2, op_def, input);
+
+           // store output layer to map
+           net_output[output] = l;
         }
         else if (op_def.type() == "Relu") {
+
+            string input_name = op_def.input(0);
+            string output_name = op_def.output(0);
+
+            if (net_output.find(input_name) == net_output.end()) {
+                // input layer MUST already exist
+                std::cout << "LAYER INPUT IS NOT READY" << std::endl;
+                return -1;
+            }
+
+            input = net_output[input_name];
+
+            Layer l = build_relu(input);
+            
+            // store output layer to map
+            net_output[output] = l;
         }
         else if (op_def.type() == "MaxPool") {
+            
+            string input_name = op_def.input(0);
+            string output_name = op_def.output(0);
+
+            if (net_output.find(input_name) == net_output.end()) {
+                // input layer MUST already exist
+                std::cout << "LAYER INPUT IS NOT READY" << std::endl;
+                return -1;
+            }
+
+            input = net_output[input_name];
+
+            Layer l = build_maxpool(op_def, input);
+
+            // store output layer to map
+            net_output[output] = l;
         }
         else if (op_def.type() == "LRN") {
+
+            string input_name = op_def.input(0);
+            string output_name = op_def.output(0);
+
+            if (net_output.find(input_name) == net_output.end()) {
+                // input layer MUST already exist
+                std::cout << "LAYER INPUT IS NOT READY" << std::endl;
+                return -1;
+            }
+
+            input = net_output[input_name];
+
+            Layer l = build_lrn(op_def, input);
+
+            // store output layer to map
+            net_output[output] = l;
         }
         else if (op_def.type() == "DepthConcat") {
         }
         else if (op_def.type() == "AveragePool") {
+            string input_name = op_def.input(0);
+            string output_name = op_def.output(0);
+
+            if (net_output.find(input_name) == net_output.end()) {
+                // input layer MUST already exist
+                std::cout << "LAYER INPUT IS NOT READY" << std::endl;
+                return -1;
+            }
+
+            input = net_output[input_name];
+
+            Layer l = build_avgpool(op_def, input);
+
+            // store output layer to map
+            net_output[output] = l;
         }
         else if (op_def.type() == "FC") {
         }
@@ -89,75 +201,9 @@ int main(int argc, char **argv) {
         }
         else {
             std::cout<< "ENCOUNTER SOME LAYER DOES NOT IMPLEMENTED YET" << std::endl;
-            return 0;
-        }
-
-        for (int input_idx=0; input_idx<op_def.input_size(); input_idx++){
-            string name = op_def.input(input_idx);
-            if (net_output.find(name) != net_output.end()) {
-                // input already defined
-                continue;
-            }
-
-            // do we need to iterate from beginning every time?
-            for (tensor_idx=0; tensor_idx<tensor.protos_size(); tensor_idx++) {
-                if (tensor.protos(tensor_idx).name() == name) {
-                    const caffe2::TensorProto& p = tensor.protos(tensor_idx);
-                    Image<float> filter = LoadImageFromTensor(p);
-                    net_output[name] = filter;
-                    break;
-                }
-           }
+            return -1;
         }
     }
-
-    // conv2d0 layer
-    const caffe2::OperatorDef& conv_op = netDef.op(0);
-
-    const caffe2::TensorProto& conv2d0_w = tensor.protos(0);
-    Halide::Image<float> conv_k = LoadImageFromTensor(conv2d0_w);
-    const caffe2::TensorProto& con2d0_b = tensor.protos(1);
-    Halide::Image<float> conv_b = LoadImageFromTensor(conv2d0_b);
-
-    /***** Set up weights and bias for layers *****/
-	int n_f = conv2d0_w.dims(0);  // number of filters
-	int f_w = conv2d0_w.dims(1);  // filter width
-	int f_h = conv2d0_w.dims(2);  // filter height
-
-	int pad = conv_op.arg(2).i(); // padding required to handle boundaries
-	int stride = conv_op.arg(0).i(); // stride at which the filter evaluated
-
-	Convolutional * conv  = new Convolutional(n_f, f_w, f_h, pad,
-											  stride, reg, d_layer);
-    conv->params[0] = conv_k;
-    conv->params[1] = conv_b;
-
-	network.push_back(conv);
-
-    /***** RELU  *****/
-    // Rectified Linear Unit just normalize the data
-    ReLU * relu = new ReLU(conv);
-    network.push_back(relu);
-
-    /***** MAX POOL  *****/
-    int p_w = 2; // pooling width
-    int p_h = 2; // pooling height
-    int p_stride = 2; // pooling stride
-
-    MaxPooling * pool = new MaxPooling(p_w, p_h, p_stride, relu);
-    network.push_back(pool);
-
-    Flatten * flatten = new Flatten(pool);
-    network.push_back(flatten);
-
-    SoftMax * softm = new SoftMax(flatten);
-    network.push_back(softm);
-
-    int C = 10; // number of classes
-
-    Image<float> scores(C, N);
-
-	printf("construct network pass\n");
 
 	printf("test pass\n");
 

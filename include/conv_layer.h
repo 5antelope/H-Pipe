@@ -10,7 +10,7 @@ public:
   // number of filters, filter height, filter width, padding and stride
   int num_f, f_h, f_w, pad, stride;
 
-  float reg;
+  float reg = 1.f;
 
   Func forward_clamp;
 
@@ -22,7 +22,7 @@ public:
   int vec_len = 8;
 
   Convolutional(int _num_f, int _f_w, int _f_h, int _pad, int _stride,
-                float _reg, Layer *in, int schedule = true) : Layer(in) {
+                Layer *in, int schedule = true) : Layer(in) {
 
     assert(in_layer->out_dims() == 4);
 
@@ -30,7 +30,7 @@ public:
     in_ch = in_layer->out_dim_size(2);
     in_h = in_layer->out_dim_size(1);
     in_w = in_layer->out_dim_size(0);
-    reg = _reg;
+    // reg = _reg;
 
     printf("ASSERT (%d + 2 * %d - %d) mod %d\n", in_h, _pad, _f_h, _stride);
     // assert((in_h + 2 * _pad - _f_h) % _stride == 0);
