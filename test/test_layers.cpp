@@ -72,15 +72,15 @@ int main(int argc, char **argv) {
     // conv2d0 layer
     const caffe2::OperatorDef& conv_op = netDef.op(0);
 
-    const caffe2::TensorProto& tensor_w = tensor.protos(0);
-    Halide::Image<float> conv_k = LoadImageFromTensor(tensor_w);
-    const caffe2::TensorProto& tensor_b = tensor.protos(1);
-    Halide::Image<float> conv_b = LoadImageFromTensor(tensor_b);
+    const caffe2::TensorProto& conv2d0_w = tensor.protos(0);
+    Halide::Image<float> conv_k = LoadImageFromTensor(conv2d0_w);
+    const caffe2::TensorProto& con2d0_b = tensor.protos(1);
+    Halide::Image<float> conv_b = LoadImageFromTensor(conv2d0_b);
 
     /***** Set up weights and bias for layers *****/
-	int n_f = tensor_w.dims(0);  // number of filters
-	int f_w = tensor_w.dims(1);  // filter width
-	int f_h = tensor_w.dims(2);  // filter height
+	int n_f = conv2d0_w.dims(0);  // number of filters
+	int f_w = conv2d0_w.dims(1);  // filter width
+	int f_h = conv2d0_w.dims(2);  // filter height
 
 	int pad = conv_op.arg(2).i(); // padding required to handle boundaries
 	int stride = conv_op.arg(0).i(); // stride at which the filter evaluated
