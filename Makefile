@@ -22,7 +22,7 @@ INCLUDES = -I./include \
 LDFLAGS = -L/home/15-418/Halide/bin -lHalide -ldl\
 		  -L/home/15-418/protobuf-2.6.1/lib -lprotobuf \
 		  -L/afs/cs/academic/class/15418-s13/public/lib -lglog \
-		  -L/home/15-418/gflags-2.1.2/lib -lgflags
+		  #-L/home/15-418/gflags-2.1.2/lib -lgflags
 
 # define any libraries to link into executable:
 LIBS = -ldl
