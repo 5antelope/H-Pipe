@@ -4,7 +4,9 @@
 #include "relu_layer.h"
 #include "softmax_layer.h"
 #include "max_pool_layer.h"
+#include "avg_pool_layer.h"
 #include "flat_layer.h"
+#include "concat_layer.h"
 
 #include "Halide.h"
 
@@ -20,8 +22,8 @@ Layer* build_avgpool(const caffe2::OperatorDef& op, Layer* input);
 
 Layer* build_lrn(const caffe2::OperatorDef& op, Layer* input);
 
-Layer* build_concat(Layer* input);
+Layer* build_concat(std::vector(Layer*) inputs);
 
-Layer* build_fc(Layer* input);
+Layer* build_fc(const caffe2::TensorProto& w, const caffe2::TensorProto& b, Layer* input);
 
 Layer* build_softmax(Layer* input);

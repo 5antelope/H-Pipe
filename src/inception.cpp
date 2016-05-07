@@ -117,7 +117,7 @@ int main(int argc, char **argv) {
                     break;
            }
 
-           Layer l = build_conv(t1, t2, op_def, input);
+           Layer* l = build_conv(t1, t2, op_def, input);
 
            // store output layer to map
            net_output[output] = l;
@@ -135,7 +135,7 @@ int main(int argc, char **argv) {
 
             input = net_output[input_name];
 
-            Layer l = build_relu(input);
+            Layer* l = build_relu(input);
             
             // store output layer to map
             net_output[output] = l;
@@ -153,7 +153,24 @@ int main(int argc, char **argv) {
 
             input = net_output[input_name];
 
-            Layer l = build_maxpool(op_def, input);
+            Layer* l = build_maxpool(op_def, input);
+
+            // store output layer to map
+            net_output[output] = l;
+        }
+        else if (op_def.type() == "AveragePool") {
+            string input_name = op_def.input(0);
+            string output_name = op_def.output(0);
+
+            if (net_output.find(input_name) == net_output.end()) {
+                // input layer MUST already exist
+                std::cout << "LAYER INPUT IS NOT READY" << std::endl;
+                return -1;
+            }
+
+            input = net_output[input_name];
+
+            Layer* l = build_avgpool(op_def, input);
 
             // store output layer to map
             net_output[output] = l;
@@ -171,14 +188,37 @@ int main(int argc, char **argv) {
 
             input = net_output[input_name];
 
-            Layer l = build_lrn(op_def, input);
+            Layer* l = build_lrn(op_def, input);
 
             // store output layer to map
             net_output[output] = l;
         }
         else if (op_def.type() == "DepthConcat") {
+
+            string output_name = op_def.output(0);
+
+            std::vector<Layer*> inputs;
+
+            for (int i=0; i<op_def.input_size(); i++) {
+                string input_name = op_def.input(i);
+
+                if (net_output.find(input_name) == net_output.end()) {
+                    std::cout << "LAYER INPUT IS NOT READY" << std::endl;
+                    return -1;
+                }
+
+                inputs.push_back(net_output[input_name]);
+
+            }
+
+            Layer* l = build_concat(inputs);
+
+            // store output layer to map
+            net_output[output] = l;            
         }
-        else if (op_def.type() == "AveragePool") {
+        else if (op_def.type() == "FC") {
+            const caffe2::TensorProto* t1, t2;
+
             string input_name = op_def.input(0);
             string output_name = op_def.output(0);
 
@@ -190,14 +230,51 @@ int main(int argc, char **argv) {
 
             input = net_output[input_name];
 
-            Layer l = build_avgpool(op_def, input);
+            string w_name = op_def.input(1);
+            string b_name = op_def.input(2);
 
-            // store output layer to map
-            net_output[output] = l;
-        }
-        else if (op_def.type() == "FC") {
+            int count = 0;
+            // do we need to iterate from beginning every time?
+            for (tensor_idx=0; tensor_idx<tensor.protos_size(); tensor_idx++) {
+                if (tensor.protos(tensor_idx).name() == w_name) {
+                    t1 = tensor.protos(tensor_idx);
+                    net_tensor[w_name] = t1;
+                    count++;
+                    continue;
+                }
+                else if (tensor.protos(tensor_idx).name() == b_name) {
+                    t2 = tensor.protos(tensor_idx);
+                    net_tensor[b_name] = t2;
+                    count++;
+                    continue;
+                }
+
+                if (count == 2)
+                    break;
+           }
+
+           Layer* l = build_fc(t1, t2, input);
+
+           // store output layer to map
+           net_output[output] = l;
         }
         else if (op_def.type() == "Softmax") {
+
+            string input_name = op_def.input(0);
+            string output_name = op_def.output(0);
+
+            if (net_output.find(input_name) == net_output.end()) {
+                // input layer MUST already exist
+                std::cout << "LAYER INPUT IS NOT READY" << std::endl;
+                return -1;
+            }
+
+            input = net_output[input_name];
+
+            Layer* l = build_softmax(input);
+            
+            // store output layer to map
+            net_output[output] = l;
         }
         else {
             std::cout<< "ENCOUNTER SOME LAYER DOES NOT IMPLEMENTED YET" << std::endl;

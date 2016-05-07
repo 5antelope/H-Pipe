@@ -24,7 +24,7 @@ build_conv(const caffe2::TensorProto& _w, const caffe2::TensorProto& _b, const c
 }
 
 Layer* build_relu(Layer* input) {
-	ReLU * relu = new ReLU(input);
+	ReLU* relu = new ReLU(input);
     
     return relu;
 }
@@ -62,4 +62,28 @@ Layer* build_lrn(const caffe2::OperatorDef& op, Layer* input) {
 	LRN* lrn = new LRN(size, size, 1, alpha, beta, input);
 
 	return lrn;
+}
+
+Layer* build_softmax(Layer* input) {
+	SoftMax* softmax = new SoftMax(input);
+
+	return softmax;
+}
+
+Layer* build_concat(std::vecotr<Layer*> inputs) {
+	Concat* concat = new Concat(inputs);
+
+	return concat;
+}
+
+Layer* build_fc(const caffe2::TensorProto& _w, const caffe2::TensorProto& _b, Layer* input) {
+	Image<float> w = LoadImageFromTensor(_w);
+	Image<float> b = LoadImageFromTensor(_b);
+
+	FC fc = new FC(input);
+
+	fc->params[0] = w;
+    fc->params[1] = b;
+
+    return fc;
 }

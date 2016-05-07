@@ -1,11 +1,11 @@
 
-class SoftMax : public Layer {
+class SoftMax: public Layer {
 public:
   Var in_dim, n;
   int num_classes, num_samples;
 
   // Expects 2-dimensional input layer (num_classes x num_samples)
-  SoftMax(Layer *in, int schedule = 1) : Layer(in) {
+  SoftMax(Layer *in, int schedule = 1): Layer(in) {
     assert(in->out_dims() == 2);
 
     //in_f: in_layer's forward function; in_layer = in if in is defined.
