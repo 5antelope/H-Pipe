@@ -1,5 +1,3 @@
-#include "Halide.h"
-
 class Concat: public Layer {
 
   int in_w, in_h, in_channel, in_num;

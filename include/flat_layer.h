@@ -1,4 +1,3 @@
-
 class Flatten: public Layer {
     public:
         Var x, y, z, n;

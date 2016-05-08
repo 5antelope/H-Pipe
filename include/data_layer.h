@@ -1,4 +1,3 @@
-
 class DataLayer : public Layer {
 
 public:

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "caffe2.pb.h"
+#include "common.h"
 #include "Halide.h"
 
 /**

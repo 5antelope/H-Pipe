@@ -1,5 +1,3 @@
-#include "Halide.h"
-
 class MaxPooling : public Layer {
 public:
   // number of color channels in input in_c

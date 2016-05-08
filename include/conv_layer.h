@@ -1,5 +1,3 @@
-#include "Halide.h"
-
 class Convolutional : public Layer {
 public:
   Var x, y, z, n;

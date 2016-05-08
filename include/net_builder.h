@@ -10,7 +10,7 @@
 #include "lrn_layer.h"
 #include "fully_conn_layer.h"
 
-#include "caffe2.pb.h"
+#include "common.h"
 
 #include "Halide.h"
 

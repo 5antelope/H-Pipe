@@ -1,5 +1,3 @@
-#include "Halide.h"
-
 class ReLU : public Layer {
 public:
   Var x, y, z, w;

@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <iostream>
-#include <fstream>
-
 #include "tensor2image.h"
 
 using namespace Halide;

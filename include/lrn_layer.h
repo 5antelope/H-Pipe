@@ -1,7 +1,3 @@
-#include "Halide.h"
-
-using namespace Halide;
-
 class LRN: public Layer {
 public:
     Var x, y, z, n;

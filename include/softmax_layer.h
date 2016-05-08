@@ -1,4 +1,3 @@
-
 class SoftMax: public Layer {
 public:
   Var in_dim, n;

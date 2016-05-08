@@ -1,5 +1,3 @@
-#include "Halide.h"
-
 class FC: public Layer {
 public:
 	Var x, y, z, n;

@@ -1,4 +1,3 @@
-#include "tensor2image.h"
 #include "net_builder.h"
 
 using namespace Halide;
