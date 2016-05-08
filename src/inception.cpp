@@ -1,13 +1,4 @@
-#include "layers.h"
-#include "data_layer.h"
-#include "conv_layer.h"
-#include "relu_layer.h"
-#include "softmax_layer.h"
-#include "max_pool_layer.h"
-#include "avg_pool_layer.h"
-#include "flat_layer.h"
-#include "lrn_layer.h"
-#include "fully_conn_layer.h"
+#include "net_builder.h"
 #include "tensor2image.h"
 
 #include "Halide.h"
@@ -84,7 +75,6 @@ int main(int argc, char **argv) {
         Layer* input;
 
         if (op_def.type() == "Conv") {
-            const caffe2::TensorProto* t1, t2;
 
             string input_name = op_def.input(0);
             string output_name = op_def.output(0);
@@ -104,26 +94,27 @@ int main(int argc, char **argv) {
             // do we need to iterate from beginning every time?
             for (tensor_idx=0; tensor_idx<tensor.protos_size(); tensor_idx++) {
                 if (tensor.protos(tensor_idx).name() == w_name) {
-                    t1 = tensor.protos(tensor_idx);
+                    const caffe2::TensorProto& t1 = tensor.protos(tensor_idx);
                     net_tensor[w_name] = t1;
                     count++;
                     continue;
                 }
                 else if (tensor.protos(tensor_idx).name() == b_name) {
-                    t2 = tensor.protos(tensor_idx);
+                    const caffe2::TensorProto& t2 = tensor.protos(tensor_idx);
                     net_tensor[b_name] = t2;
                     count++;
                     continue;
                 }
 
-                if (count == 2)
+                if (count == 2) {
+                    Layer* l = build_conv(net_tensor[w_name], net_tensor[b_name], op_def, input);
+
+                    // store output layer to map
+                    net_output[output_name] = l;
                     break;
+                }
            }
 
-           Layer* l = build_conv(t1, t2, op_def, input);
-
-           // store output layer to map
-           net_output[output_name] = l;
         }
         else if (op_def.type() == "Relu") {
 

@@ -29,6 +29,10 @@ public:
 
   }
 
+  void back_propagate(Func dout) {
+    std::cout << "NOT IMPLEMENTED YET" << std::endl;
+  }
+
   int out_dims() { return 4; }
 
   int out_dim_size(int i) {
