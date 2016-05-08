@@ -15,9 +15,9 @@ Concat::Concat(std::vector<Layer*> inputs): Layer(inputs[0]) {
 
   // concat over channel dimension only
   for (Layer* input : inputs) {
-    Halide::RDom r(0, input->out_dim_size(0)); // x dimension
+    Halide::RDom r(0, input->out_dim_size(2)); // x dimension
     forward(x, y, offset + r, n) = input->forward(x, y, r, n);
-    in_channel += input->out_dim_size(2);
+    offset += input->out_dim_size(2);
   }
 
 }

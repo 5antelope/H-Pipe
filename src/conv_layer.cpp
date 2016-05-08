@@ -35,22 +35,60 @@ Convolutional::Convolutional(int _num_f, int _f_w, int _f_h, int _pad, int _stri
       0, in_w,
       0, in_h);
 
+  bool oos = false; // out of size
+  if (f_w * f_h * in_ch * num_f *4 >= 2^31 - 1) {
+    std::cout << "input size exceed Halide limitation" << std::endl;
+    oos = true;
+  }
+
   // Create parameters
-  Image<float> W(f_w, f_h, in_ch, num_f), b(num_f);
-  params.push_back(W);
+  Image<float> b(num_f);
   params.push_back(b);
+  if (!oos) {
+    Image<float> W(f_w, f_h, in_ch, num_f);
+    params.push_back(W);
+  }
+  else { // out of size limitation of 2^31 - 1
+    Image<float> W1(f_w, f_h, in_ch, num_f / 2);
+    Image<float> W2(f_w, f_h, in_ch, num_f / 2);
+    params.push_back(W1);
+    params.push_back(W2);
+  }
 
   // Define forward
   RDom r(0, f_w, 0, f_h, 0, in_ch);
 
   // Initialize to bias
-  forward(x, y, z, n) = b(z);
-  forward(x, y, z, n) += W(r.x, r.y, r.z, z) *
-                         forward_clamp(x * stride + r.x - pad,
-                          y * stride + r.y - pad,
-                          r.z,
-                          n);
+  if (!oos) {
+    forward(x, y, z, n) = b(z);
+    forward(x, y, z, n) += W(r.x, r.y, r.z, z) *
+                           forward_clamp(x * stride + r.x - pad,
+                            y * stride + r.y - pad,
+                            r.z,
+                            n);
+  }
+  else {
+    Func f1(x, y, z, n) = W1(r.x, r.y, r.z, z) *
+                           forward_clamp(x * stride + r.x - pad,
+                            y * stride + r.y - pad,
+                            r.z,
+                            n);
+    Func f2(x, y, z, n) = W2(r.x, r.y, r.z, z) *
+                           forward_clamp(x * stride + r.x - pad,
+                            y * stride + r.y - pad,
+                            r.z,
+                            n);
+    // concat two func
+    RDom r(0, num_f/2);
 
+    int offset = 0;
+    forward(x, y, z, r + offset) = f1(x, y, z, n);
+    offset += num_f/2;
+    forward(x, y, z, r + offset) = f2(x, y, z, n);
+
+    forward(x, y, z, n) += b(z);
+  }
+  
   if (schedule) {
     forward.update().reorder(y, x, r.z);
     // blocking spatially with vectorization
