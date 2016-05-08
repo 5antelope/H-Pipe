@@ -95,13 +95,13 @@ int main(int argc, char **argv) {
             for (tensor_idx=0; tensor_idx<tensor.protos_size(); tensor_idx++) {
                 if (tensor.protos(tensor_idx).name() == w_name) {
                     const caffe2::TensorProto& t1 = tensor.protos(tensor_idx);
-                    net_tensor[w_name] = t1;
+                    net_tensor.insert(pair<string,const caffe2::TensorProto>(w_name,t1));
                     count++;
                     continue;
                 }
                 else if (tensor.protos(tensor_idx).name() == b_name) {
                     const caffe2::TensorProto& t2 = tensor.protos(tensor_idx);
-                    net_tensor[b_name] = t2;
+                    net_tensor.insert(pair<string,const caffe2::TensorProto>(b_name,t2));
                     count++;
                     continue;
                 }
@@ -211,7 +211,6 @@ int main(int argc, char **argv) {
             net_output[output_name] = l;
         }
         else if (op_def.type() == "FC") {
-            const caffe2::TensorProto* t1, t2;
 
             string input_name = op_def.input(0);
             string output_name = op_def.output(0);
@@ -231,26 +230,27 @@ int main(int argc, char **argv) {
             // do we need to iterate from beginning every time?
             for (tensor_idx=0; tensor_idx<tensor.protos_size(); tensor_idx++) {
                 if (tensor.protos(tensor_idx).name() == w_name) {
-                    t1 = tensor.protos(tensor_idx);
-                    net_tensor[w_name] = t1;
+                    const caffe2::TensorProto& t1 = tensor.protos(tensor_idx);
+                    net_tensor.insert(pair<string,const caffe2::TensorProto>(w_name,t1));
                     count++;
                     continue;
                 }
                 else if (tensor.protos(tensor_idx).name() == b_name) {
-                    t2 = tensor.protos(tensor_idx);
-                    net_tensor[b_name] = t2;
+                    const caffe2::TensorProto& t2 = tensor.protos(tensor_idx);
+                    net_tensor.insert(pair<string,const caffe2::TensorProto>(b_name,t2));
                     count++;
                     continue;
                 }
 
-                if (count == 2)
+                if (count == 2) {
+                    Layer* l = build_fc(net_tensor[w_name], net_tensor[b_name], input);
+
+                    // store output layer to map
+                    net_output[output_name] = l;
                     break;
+                }
            }
 
-           Layer* l = build_fc(t1, t2, input);
-
-           // store output layer to map
-           net_output[output_name] = l;
         }
         else if (op_def.type() == "Softmax") {
 
