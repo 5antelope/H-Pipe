@@ -1,3 +1,6 @@
+#ifndef MAX_POOL_LAYER_H
+#define MAX_POOL_LAYER_H
+
 class MaxPooling : public Layer {
 public:
   // number of color channels in input in_c
@@ -13,8 +16,7 @@ public:
   Var par;
   int vec_len;
 
-  MaxPooling(int _p_w, int _p_h, int _stride, Layer *in,
-             int schedule = 1) : Layer(in);
+  MaxPooling(int _p_w, int _p_h, int _stride, Layer *in, int schedule);
 
   void back_propagate(Func dout);
 
@@ -22,3 +24,5 @@ public:
 
   int out_dim_size(int i);
 };
+
+#endif

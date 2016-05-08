@@ -1,3 +1,6 @@
+#ifndef TENSOR2IMAGE_H
+#define TENSOR2IMAGE_H
+
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -13,3 +16,5 @@
  * @return
  */
 Halide::Image<float> LoadImageFromTensor(const caffe2::TensorProto& tensor);
+
+#endif

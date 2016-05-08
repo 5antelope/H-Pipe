@@ -1,3 +1,6 @@
+#ifndef CONV_LAYER_H
+#define CONV_LAYER_H
+
 class Convolutional : public Layer {
 public:
   Var x, y, z, n;
@@ -8,7 +11,7 @@ public:
   // number of filters, filter height, filter width, padding and stride
   int num_f, f_h, f_w, pad, stride;
 
-  float reg = 1.f;
+  float reg;
 
   Func forward_clamp;
 
@@ -20,7 +23,7 @@ public:
   int vec_len;
 
   Convolutional(int _num_f, int _f_w, int _f_h, int _pad, int _stride,
-                Layer *in, int schedule = true) : Layer(in);
+                Layer *in, int schedule);
 
   void back_propagate(Func dout);
 
@@ -28,3 +31,5 @@ public:
 
   int out_dim_size(int i);
 };
+
+#endif

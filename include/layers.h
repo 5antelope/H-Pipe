@@ -1,3 +1,6 @@
+#ifndef LAYERS_H
+#define LAYERS_H
+
 #include "Halide.h"
 #include <map>
 
@@ -49,3 +52,5 @@ public:
 
   virtual ~Layer() { };
 };
+
+#endif

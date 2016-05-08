@@ -1,6 +1,5 @@
 #include "fully_conn_layer.h"
 
-
 FC::FC(Layer* in, int schedule = true): Layer(in) {
 	RDom r(0, in->out_dim_size(0));
 

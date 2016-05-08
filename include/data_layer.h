@@ -1,3 +1,6 @@
+#ifndef DATA_LAYER_H
+#define DATA_LAYER_H
+
 class DataLayer : public Layer {
 
 public:
@@ -9,7 +12,7 @@ public:
   Var x, y, z, n;
 
   DataLayer(int _in_w, int _in_h, int _in_ch, int _num_samples,
-            Func data) : Layer(0);
+            Func data);
 
   // Nothing to propagate
   void back_propagate(Func dout);
@@ -19,3 +22,5 @@ public:
   int out_dim_size(int i);
 
 };
+
+#endif

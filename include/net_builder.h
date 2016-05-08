@@ -1,3 +1,6 @@
+#ifndef NET_BUILDER_H
+#define NET_BUILDER_H
+
 #include "layers.h"
 #include "data_layer.h"
 #include "conv_layer.h"
@@ -31,3 +34,5 @@ Layer* build_concat(std::vector<Layer*> inputs);
 Layer* build_fc(const caffe2::TensorProto& w, const caffe2::TensorProto& b, Layer* input);
 
 Layer* build_softmax(Layer* input);
+
+#endif
