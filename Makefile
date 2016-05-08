@@ -12,10 +12,8 @@ INCLUDES = -I./include \
 		   -I./proto \
 		   -I/home/15-418/Halide/include \
 		   -I/home/15-418/Halide/tools \
-		   -I/home/15-418/protobuf-2.6.1/include  \
-		   -I/home/yangwu/git/H-Net/proto \
+		   -I/home/15-418/protobuf-2.6.1/include \
 		   -I/home/15-418/gflags-2.1.2/include \
-		   -I/home/15-418/caffe2/caffe2/core \
 		   `pkg-config --cflags-only-I protobuf`
 
 # define library paths in addition to /usr/lib
@@ -30,6 +28,7 @@ LIBS = -ldl
 EXTRA_SCRIPTS = `pkg-config --libs protobuf libpng`
 
 CCFILES = $(wildcard ./src/*.cpp)
+CCFILES += ./proto/caffe2.pb.cc
 
 OBJS=$(OBJDIR)/main
 
