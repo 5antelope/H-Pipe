@@ -1,7 +1,7 @@
 #include "softmax_layer.h"
 
 // Expects 2-dimensional input layer (num_classes x num_samples)
-SoftMax::SoftMax(Layer *in, int schedule = 1): Layer(in) {
+SoftMax::SoftMax(Layer *in, int schedule): Layer(in) {
   assert(in->out_dims() == 2);
 
   //in_f: in_layer's forward function; in_layer = in if in is defined.

@@ -1,6 +1,6 @@
 #include "fully_conn_layer.h"
 
-FC::FC(Layer* in, int schedule = true): Layer(in) {
+FC::FC(Layer* in, int schedule): Layer(in) {
 	RDom r(0, in->out_dim_size(0));
 
 	Image<float> w = params[0];

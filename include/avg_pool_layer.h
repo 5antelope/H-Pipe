@@ -2,6 +2,7 @@
 #define AVG_POOL_LAYER_H
 
 #include "layers.h"
+#include "Halide.h"
 
 class AvgPooling : public Layer {
 public:
@@ -12,15 +13,15 @@ public:
   // height and width of the pool
   // stride at which the pooling is applied
   int p_h, p_w, stride;
-  Var x, y, z, n;
+  Halide::Var x, y, z, n;
   
   // parameters for scheduling
-  Var par;
+  Halide::Var par;
   int vec_len;
 
-  AvgPooling(int _p_w, int _p_h, int _stride, Layer *in, int schedule);
+  AvgPooling(int _p_w, int _p_h, int _stride, Layer *in, int schedule = 1);
 
-  void back_propagate(Func dout);
+  void back_propagate(Halide::Func dout);
 
   int out_dims();
 

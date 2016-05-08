@@ -1,6 +1,6 @@
 #include "lrn_layer.h"
 
-LRN::LRN(Layer* in, int region_x=1, int region_y=1, int region_z=1, float alpha=1.0f, float beta=5.0f): Layer(in) {
+LRN::LRN(Layer* in, int region_x, int region_y, int region_z, float alpha, float beta): Layer(in) {
 
     Func clamped = BoundaryConditions::constant_exterior(in->forward, 0.0f, 0, in->out_dim_size(0), 0, in->out_dim_size(1), 0, in->out_dim_size(2));
     Func activation;

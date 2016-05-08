@@ -1,7 +1,7 @@
 #include "max_pool_layer.h"
 
 MaxPooling::MaxPooling(int _p_w, int _p_h, int _stride, Layer *in,
-           int schedule = 1) : Layer(in) {
+           int schedule) : Layer(in) {
   vec_len = 8;
 
   assert(in_layer->out_dims() == 4);

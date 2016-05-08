@@ -1,15 +1,18 @@
 #ifndef FLAT_LAYER_H
 #define FLAT_LAYER_H
 
+#include "layers.h"
+#include "Halide.h"
+
 class Flatten: public Layer {
     public:
-        Var x, y, z, n;
+        Halide::Var x, y, z, n;
         int out_width;
         int num_samples;
 
-        Flatten(Layer *in, int schedule);
+        Flatten(Layer *in, int schedule = 1);
 
-        void back_propagate(Func dout);
+        void back_propagate(Halide::Func dout);
 
         int out_dims();
 

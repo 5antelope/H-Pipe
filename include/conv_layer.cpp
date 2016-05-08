@@ -1,7 +1,7 @@
 #include "conv_layer.h"
 
 Convolutional::Convolutional(int _num_f, int _f_w, int _f_h, int _pad, int _stride,
-              Layer *in, int schedule = true) : Layer(in) {
+              Layer *in, int schedule) : Layer(in) {
 
   int o_block_size = 16;
   int y_block_size = 32;

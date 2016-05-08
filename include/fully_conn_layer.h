@@ -1,13 +1,16 @@
 #ifndef FULLY_CONN_LAYER_H
 #define FULLY_CONN_LAYER_H
 
+#include "layers.h"
+#include "Halide.h"
+
 class FC: public Layer {
 public:
-	Var x, y, z, n;
+	Halide::Var x, y, z, n;
 
-	FC(Layer* in, int schedule);
+	FC(Layer* in, int schedule = true);
 
-    void back_propagate(Func dout);
+    void back_propagate(Halide::Func dout);
 
 	int out_dims();
 

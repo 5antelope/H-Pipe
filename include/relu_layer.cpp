@@ -1,6 +1,6 @@
 #include "relu_layer.h"
 
-ReLU::ReLU(Layer *in, int schedule = 0) : Layer(in) {
+ReLU::ReLU(Layer *in, int schedule) : Layer(in) {
 
   vec_len = 8;
 

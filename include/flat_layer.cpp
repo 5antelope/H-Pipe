@@ -1,6 +1,6 @@
 #include "flat_layer.h"
 
-Flatten::Flatten(Layer *in, int schedule = 1) : Layer(in) {
+Flatten::Flatten(Layer *in, int schedule) : Layer(in) {
     assert(in->out_dims() >= 2 && in->out_dims() <= 4);
     num_samples = in_layer->out_dim_size(in_layer->out_dims() - 1);
     // Define forward
