@@ -7,6 +7,10 @@
 #include "avg_pool_layer.h"
 #include "flat_layer.h"
 #include "concat_layer.h"
+#include "lrn_layer.h"
+#include "fully_conn_layer.h"
+
+#include "caffe2.pb.h"
 
 #include "Halide.h"
 
@@ -22,7 +26,7 @@ Layer* build_avgpool(const caffe2::OperatorDef& op, Layer* input);
 
 Layer* build_lrn(const caffe2::OperatorDef& op, Layer* input);
 
-Layer* build_concat(std::vector(Layer*) inputs);
+Layer* build_concat(std::vector<Layer*> inputs);
 
 Layer* build_fc(const caffe2::TensorProto& w, const caffe2::TensorProto& b, Layer* input);
 

@@ -5,7 +5,6 @@ SRCDIR=src
 
 CXX=g++
 
-
 # this flag only works for linux machine, not Max OS
 CXXFLAGS+=-g -fopenmp -Wall -Wno-unused-parameter -O2 -std=c++11
 
@@ -30,12 +29,12 @@ LIBS = -ldl
 EXTRA_SCRIPTS = `pkg-config --libs protobuf libpng`
 
 CCFILES = $(wildcard ./include/*.cpp) ./proto/caffe2.pb.cc
+CCFILES += $(SRCDIR)/inception.cpp
 
-# CCFILES += $(SRCDIR)/main.cpp
 OBJS=$(OBJDIR)/main
 
 all: dirs $(OBJDIR)
-			$(CXX) $(CXXFLAGS) -o $(OBJS) $(CCFILES)
+	$(CXX) $(CXXFLAGS) $(INC) $(CCFILES) -o $(OBJS) $(CCFILES) $(LDFLAGS) $(INCLUDES) $(EXTRA_SCRIPTS)
 
 dirs:
 	mkdir -p $(OBJDIR)

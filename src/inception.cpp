@@ -4,7 +4,10 @@
 #include "relu_layer.h"
 #include "softmax_layer.h"
 #include "max_pool_layer.h"
+#include "avg_pool_layer.h"
 #include "flat_layer.h"
+#include "lrn_layer.h"
+#include "fully_conn_layer.h"
 #include "tensor2image.h"
 
 #include "Halide.h"
@@ -77,7 +80,7 @@ int main(int argc, char **argv) {
         // define/save output with name to net_output for other functions
 
         const caffe2::OperatorDef op_def = netDef.op(net_idx);
-        
+
         Layer* input;
 
         if (op_def.type() == "Conv") {
@@ -120,7 +123,7 @@ int main(int argc, char **argv) {
            Layer* l = build_conv(t1, t2, op_def, input);
 
            // store output layer to map
-           net_output[output] = l;
+           net_output[output_name] = l;
         }
         else if (op_def.type() == "Relu") {
 
@@ -136,12 +139,12 @@ int main(int argc, char **argv) {
             input = net_output[input_name];
 
             Layer* l = build_relu(input);
-            
+
             // store output layer to map
-            net_output[output] = l;
+            net_output[output_name] = l;
         }
         else if (op_def.type() == "MaxPool") {
-            
+
             string input_name = op_def.input(0);
             string output_name = op_def.output(0);
 
@@ -156,7 +159,7 @@ int main(int argc, char **argv) {
             Layer* l = build_maxpool(op_def, input);
 
             // store output layer to map
-            net_output[output] = l;
+            net_output[output_name] = l;
         }
         else if (op_def.type() == "AveragePool") {
             string input_name = op_def.input(0);
@@ -173,7 +176,7 @@ int main(int argc, char **argv) {
             Layer* l = build_avgpool(op_def, input);
 
             // store output layer to map
-            net_output[output] = l;
+            net_output[output_name] = l;
         }
         else if (op_def.type() == "LRN") {
 
@@ -191,7 +194,7 @@ int main(int argc, char **argv) {
             Layer* l = build_lrn(op_def, input);
 
             // store output layer to map
-            net_output[output] = l;
+            net_output[output_name] = l;
         }
         else if (op_def.type() == "DepthConcat") {
 
@@ -214,7 +217,7 @@ int main(int argc, char **argv) {
             Layer* l = build_concat(inputs);
 
             // store output layer to map
-            net_output[output] = l;            
+            net_output[output_name] = l;
         }
         else if (op_def.type() == "FC") {
             const caffe2::TensorProto* t1, t2;
@@ -256,7 +259,7 @@ int main(int argc, char **argv) {
            Layer* l = build_fc(t1, t2, input);
 
            // store output layer to map
-           net_output[output] = l;
+           net_output[output_name] = l;
         }
         else if (op_def.type() == "Softmax") {
 
@@ -272,9 +275,9 @@ int main(int argc, char **argv) {
             input = net_output[input_name];
 
             Layer* l = build_softmax(input);
-            
+
             // store output layer to map
-            net_output[output] = l;
+            net_output[output_name] = l;
         }
         else {
             std::cout<< "ENCOUNTER SOME LAYER DOES NOT IMPLEMENTED YET" << std::endl;

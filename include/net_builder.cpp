@@ -1,21 +1,22 @@
+#include "tensor2image.h"
 #include "net_builder.h"
 
-using namesapce Halide;
+using namespace Halide;
 
 Layer*
 build_conv(const caffe2::TensorProto& _w, const caffe2::TensorProto& _b, const caffe2::OperatorDef& op, Layer* input) {
 	Image<float> w = LoadImageFromTensor(_w);
 	Image<float> b = LoadImageFromTensor(_b);
 
-	int num_filter    = w.dims(0);  // number of filters
-	int filter_width  = w.dims(1);  // filter width
-	int filter_height = w.dims(2);  // filter height
+	int filter_width  = w.width();  // filter width
+	int filter_height = w.height();  // filter height
+	int num_filter    = w.extent(3);  // number of filters
 
 
 	int pad    = op.arg(2).i(); // padding required to handle boundaries
 	int stride = op.arg(0).i(); // stride at which the filter evaluated
 
-	Convolutional* conv  = new Convolutional(num_filter, num_filter, filter_height, pad, stride, d_layer);
+	Convolutional* conv  = new Convolutional(num_filter, num_filter, filter_height, pad, stride, input);
 
     conv->params[0] = w;
     conv->params[1] = b;
@@ -59,7 +60,7 @@ Layer* build_lrn(const caffe2::OperatorDef& op, Layer* input) {
 
 	// only support square box lrn
 	// assume region-z = 1 (channel)
-	LRN* lrn = new LRN(size, size, 1, alpha, beta, input);
+	LRN* lrn = new LRN(input, size, size, 1, alpha, beta);
 
 	return lrn;
 }
@@ -70,7 +71,7 @@ Layer* build_softmax(Layer* input) {
 	return softmax;
 }
 
-Layer* build_concat(std::vecotr<Layer*> inputs) {
+Layer* build_concat(std::vector<Layer*> inputs) {
 	Concat* concat = new Concat(inputs);
 
 	return concat;
@@ -80,7 +81,7 @@ Layer* build_fc(const caffe2::TensorProto& _w, const caffe2::TensorProto& _b, La
 	Image<float> w = LoadImageFromTensor(_w);
 	Image<float> b = LoadImageFromTensor(_b);
 
-	FC fc = new FC(input);
+	FC* fc = new FC(input);
 
 	fc->params[0] = w;
     fc->params[1] = b;

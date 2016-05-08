@@ -34,9 +34,9 @@ public:
     // Define forward
     Func in_f = in_layer->forward;
     RDom r(0, p_w, 0, p_h);
-    forward(x, y, z, n) = average(in_f(x * stride + r.x,
+    forward(x, y, z, n) = sum(in_f(x * stride + r.x,
                                        y * stride + r.y,
-                                       z, n));
+                                       z, n)) / (p_w * p_h);
 
     if (schedule) {
       forward.vectorize(x, vec_len);

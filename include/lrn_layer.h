@@ -1,15 +1,14 @@
 #include "Halide.h"
 
-using namesapce Halide;
+using namespace Halide;
 
 class LRN: public Layer {
 public:
     Var x, y, z, n;
 
-    LRN(int region_x=1, int region_y=1, int region_z=1, float alpha=1.0f, float beta=5.0f,
-            Layer* in): Layer(in) {
+    LRN(Layer* in, int region_x=1, int region_y=1, int region_z=1, float alpha=1.0f, float beta=5.0f): Layer(in) {
 
-        Func clamped = BoundaryConditions::constant_exterior(in.forward, 0.0f, 0, in.x, 0, in.y, 0, in.z);
+        Func clamped = BoundaryConditions::constant_exterior(in->forward, 0.0f, 0, in->out_dim_size(0), 0, in->out_dim_size(1), 0, in->out_dim_size(2));
         Func activation;
         Func normalizer;
 
