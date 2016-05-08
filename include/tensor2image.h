@@ -15,6 +15,6 @@
  *
  * @return
  */
-Halide::Image<float> LoadImageFromTensor(const caffe2::TensorProto& tensor);
+inline Halide::Image<float> LoadImageFromTensor(const caffe2::TensorProto& tensor);
 
 #endif

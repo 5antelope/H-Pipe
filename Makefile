@@ -15,6 +15,7 @@ INCLUDES = -I./include \
 		   -I/home/15-418/protobuf-2.6.1/include  \
 		   -I/home/yangwu/git/H-Net/proto \
 		   -I/home/15-418/gflags-2.1.2/include \
+		   -I/home/15-418/caffe2/caffe2/core \
 		   `pkg-config --cflags-only-I protobuf`
 
 # define library paths in addition to /usr/lib
@@ -28,13 +29,12 @@ LIBS = -ldl
 
 EXTRA_SCRIPTS = `pkg-config --libs protobuf libpng`
 
-CCFILES = $(wildcard ./include/*.cpp) ./proto/caffe2.pb.cc
-CCFILES += $(SRCDIR)/inception.cpp
+CCFILES = $(wildcard ./src/*.cpp)
 
 OBJS=$(OBJDIR)/main
 
 all: dirs $(OBJDIR)
-	$(CXX) $(CXXFLAGS) $(INC) $(CCFILES) -o $(OBJS) $(CCFILES) $(LDFLAGS) $(INCLUDES) $(EXTRA_SCRIPTS)
+	$(CXX) $(CXXFLAGS) $(INC) $(CCFILES) -o $(OBJS)  $(LDFLAGS) $(INCLUDES) $(EXTRA_SCRIPTS)
 
 dirs:
 	mkdir -p $(OBJDIR)

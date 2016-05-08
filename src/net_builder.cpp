@@ -1,6 +1,9 @@
 #include "net_builder.h"
+#include "tensor2image.h"
+#include "caffe2.pb.h"
 
 using namespace Halide;
+//Image<float> LoadImageFromTensor(const caffe2::TensorProto& tensor);
 
 Layer*
 build_conv(const caffe2::TensorProto& _w, const caffe2::TensorProto& _b, const caffe2::OperatorDef& op, Layer* input) {

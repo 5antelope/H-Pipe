@@ -21,6 +21,10 @@
 
 #include "caffe2.pb.h"
 
+#ifndef COMMON_H
+#define COMMON_H
+
+
 // Disable the copy and assignment operator for a class.
 #define DISABLE_COPY_AND_ASSIGN(classname) \
     private:\
@@ -30,3 +34,5 @@
 using std::string;
 using std::fstream;
 using std::ios;
+
+#endif
