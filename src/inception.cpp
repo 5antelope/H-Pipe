@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
     map<string, Layer*> net_output;
     // key: name of tensor
     // value: tensor protobuf
-    map<string, const caffe2::TensorProto&> net_tensor;
+    map<string, const caffe2::TensorProto> net_tensor;
 
 	std::vector<Layer*> network;
 	float reg = 0.001;
