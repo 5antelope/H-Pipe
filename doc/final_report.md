@@ -1,4 +1,4 @@
-# H-Piper: A Deep Learning Framework in Halide
+# H-Piper: A Image Pipeline Framework in Halide
 \- Lei Sun, Yang Wu
 
 ## SUMMARY 
