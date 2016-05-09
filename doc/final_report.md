@@ -12,6 +12,8 @@ We proposed H-Piper, a powerful, flexible, and highly-balanced framework for dee
 
 Describe the algorithm, application, or system you parallelized in computer science terms. (Recall our discussion from the last day of class.) Figure(s) would be really useful here.
 
+To integrated with [PolyMage](http://drona.csa.iisc.ernet.in/~uday/publications/uday15asplos.pdf) for automatic scheduler, every layer should provide size in dimensions. However, [Halide::Func](https://github.com/halide/Halide/blob/master/src/Func.h) does not provide such information. Therefore, we extent our implementation for this dimension-based information as well.
+
 ## APPROACH
 
 Tell us how your implementation works. Your description should be sufficiently detailed to provide the course staff a basic understanding of your approach. Again, it might be very useful to include a figure here illustrating components of the system and/or their mapping to parallel hardware.
