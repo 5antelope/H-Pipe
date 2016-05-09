@@ -84,6 +84,9 @@ And we have a few observations from the chart:
 
 ## REFERENCES
 
-[0] Going Deeper with Convolutions, C. Szegedy, W. Liu, Y. Jia and etc.
+[1] C. Szegedy, W. Liu, Y. Jia 2015, Going Deeper with Convolutions
 
-[1] PolyMage: Automatic Optimization for Image Processing Pipelines, R. Mullapudi, V. Vasista and U. Bondhugula
+[2] R. Mullapudi, V. Vasista and U. Bondhugula 2016, PolyMage: Automatic Optimization for Image Processing Pipelines
+
+[3] ICLR 2015, Very Deep Convolutional Networks For Large-scale Image Recognition
+
