@@ -1,14 +1,11 @@
 # H-Piper: A Deep Learning Framework in Halide
 \- Lei Sun, Yang Wu
 
-## SUMMARY
+## SUMMARY 
+
 **H-Piper** is our final project for 15418.
 
-We proposed H-Piper, a powerful, flexible, and highly-balanced framework for deep learning Nets. User can easily generate customized neural networks by providing config files. We have build-in neural networks like
-
-## SUMMARY
-
-A short (no more than a paragraph) project summary. If applicable, the summary should list your project deliverables (including what you plan to show at the parallelism competition) and what machines they ran on.
+We proposed H-Piper, a powerful, flexible, and highly-balanced framework for deep learning Nets. User can easily generate customized image pipelines by providing config files. We tested our framework on VGG and Inception Network on latedays node. With our 10 basic layers, we were able to implemente vgg network and inception networks (incompleted). The idea of our project is given network definitions and weights, H-Piper would build the network and run forward.
 
 
 ## BACKGROUND
