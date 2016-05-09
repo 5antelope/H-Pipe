@@ -52,6 +52,22 @@ Also, during our development, we accidentally trigger an [assert](https://github
 
 How successful were you at achieving your goals? We expect results sections to differ from project to project, but we expect your evaluation to be very thorough (your project evaluation is a great way to demonstrate you understood topics from this course).
 
+We were able to run a complete VGG network with H-Piper, and explore some scheduler strategy for every layer of network:
+- 1. no schedule
+- 2. parallel softmax layer
+- 3. parallel maxpool layer
+- 4. parallel conv layer
+- 5. reorder conv layer
+- 6. reorder + parallel conv layer
+
+This is our result, x-axis is the schedule we were trying and y-axis is the time cost:
+![chart](https://docs.google.com/spreadsheets/d/1DVGrHmwrwSQpoLAySiYdZn9X7W8N0-TnpNACT1w4zY8/pubchart?oid=296431700&format=image)
+
+And we have a few observations from the chart:
+- Most of time in Halide pipelines are cost in computation rather in network creation. This is because in creation phase, there is no actual work being done, but define input/output of Halide::Func. And this is also a reason why fusion in Halide can be gained easily.
+- Convolution layer dominates the performance of VGG, since the updates of other types of layers does not affect the performance in a similar way as convolution layer.
+- HAND-TUNING IS PAINFUL. It is not true that a 'sophisticated' strategy would guarantee a better performance. Actually in the chart, we can see purely parallel would get worse performance. And also, there is no one-for-all general scheduler for layers. For example, parallel over channels seems to be a reasonable approach, but in case of fully-connected layer accross channels, this is not practical any more. In short, schedule must be defined based on filter size, input image and computation type.
+
 ## REFERENCES
 
 [0] Going Deeper with Convolutions, C. Szegedy, W. Liu, Y. Jia and etc.
